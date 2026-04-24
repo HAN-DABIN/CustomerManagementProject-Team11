@@ -1,9 +1,8 @@
-package com.example.customermanageproejctproduct.repository;
+package com.example.customermanagementprojectteam11.customermanageproejctproduct.repository;
 
-import com.example.customermanageproejctproduct.category.ProductCategory;
-import com.example.customermanageproejctproduct.dto.GetAllProductRequest;
-import com.example.customermanageproejctproduct.entity.Product;
-import com.example.customermanageproejctproduct.status.ProductStatus;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.category.ProductCategory;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.entity.Product;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.status.ProductStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

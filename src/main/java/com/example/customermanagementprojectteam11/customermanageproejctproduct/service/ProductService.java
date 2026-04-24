@@ -1,20 +1,16 @@
-package com.example.customermanageproejctproduct.service;
+package com.example.customermanagementprojectteam11.customermanageproejctproduct.service;
 
-import com.example.customermanageproejctproduct.category.ProductCategory;
-import com.example.customermanageproejctproduct.dto.AddProductRequest;
-import com.example.customermanageproejctproduct.dto.AddProductResponse;
-import com.example.customermanageproejctproduct.dto.GetAllProductRequest;
-import com.example.customermanageproejctproduct.dto.GetAllProductResponse;
-import com.example.customermanageproejctproduct.entity.Product;
-import com.example.customermanageproejctproduct.repository.ProductRepository;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.AddProductRequest;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.AddProductResponse;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.GetAllProductRequest;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.GetAllProductResponse;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.entity.Product;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

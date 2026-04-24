@@ -1,4 +1,4 @@
-package com.example.customermanageproejctproduct.status;
+package com.example.customermanagementprojectteam11.customermanageproejctproduct.status;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.example.customermanageproejctproduct.entity;
+package com.example.customermanagementprojectteam11.customermanageproejctproduct.entity;
 
-import com.example.customermanageproejctproduct.category.ProductCategory;
-import com.example.customermanageproejctproduct.status.ProductStatus;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.category.ProductCategory;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.status.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
