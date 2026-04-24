@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "admins")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class Admin extends BaseEntity { //BaseEntity 상속
 
     @Id
@@ -21,27 +22,27 @@ public class Admin extends BaseEntity { //BaseEntity 상속
     @Column(nullable = false, unique = true, length = 200) // 유니크(중복불가) 추가
     private String email;
 
-    @Column(nullable = false, length = 100) // 비밀번호 길이 수정 50-> 100
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 20)
-    private String role;
+    private AdminRole role;
 
     @Column(name = "phone_number",nullable = false, length = 20)
     private String phone_number;
 
-    @Column(nullable = false,length = 20)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AdminStatus status;
 
     private Admin(String name, String email,
-                  String password, String role,
+                  String password, AdminRole role,
                    String phone_number ) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
         this.phone_number = phone_number;
-        this.status = "승인 대기"; // 초기값 자동 설정.
+        this.status = AdminStatus.PENDING; // 초기값 자동 설정.
     }
 
 }
