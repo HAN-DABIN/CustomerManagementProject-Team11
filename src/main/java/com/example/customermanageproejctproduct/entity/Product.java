@@ -23,7 +23,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ProductId;
 
-    private String productname;
+    private String productName;
 
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
@@ -44,8 +44,8 @@ public class Product {
     private String userName;
     private String userEmail;
 
-    public Product(String productname, ProductCategory category, long price, long stock, ProductStatus status){
-        this.productname = productname;
+    public Product(String productName, ProductCategory category, long price, long stock, ProductStatus status){
+        this.productName = productName;
         this.category = category;
         this.price = price;
         this.stock = stock;
@@ -53,7 +53,7 @@ public class Product {
     }
 
     public void update(String productname, ProductCategory category, long price){
-        this.productname = productname;
+        this.productName = productname;
         this.category = category;
         this.price = price;
     }
