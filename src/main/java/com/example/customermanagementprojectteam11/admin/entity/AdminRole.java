@@ -11,9 +11,8 @@ public enum AdminRole {
 
     private final String description;
 
-
     AdminRole(String description) {
         this.description = description;
     }
-}
+    }
 
