@@ -1,21 +1,18 @@
-package com.example.customermanageproejctproduct.controller;
+package com.example.customermanagementprojectteam11.customermanageproejctproduct.controller;
 
-import com.example.customermanageproejctproduct.dto.AddProductRequest;
-import com.example.customermanageproejctproduct.dto.AddProductResponse;
-import com.example.customermanageproejctproduct.dto.GetAllProductRequest;
-import com.example.customermanageproejctproduct.dto.GetAllProductResponse;
-import com.example.customermanageproejctproduct.service.ProductService;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.AddProductRequest;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.AddProductResponse;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.GetAllProductRequest;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.dto.GetAllProductResponse;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

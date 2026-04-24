@@ -1,4 +1,4 @@
-package com.example.customermanageproejctproduct.category;
+package com.example.customermanagementprojectteam11.customermanageproejctproduct.category;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
