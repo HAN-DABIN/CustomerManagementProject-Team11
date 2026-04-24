@@ -1,5 +1,6 @@
 package com.example.customermanagementprojectteam11.admin.entity;
 
+import com.example.customermanagementprojectteam11.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

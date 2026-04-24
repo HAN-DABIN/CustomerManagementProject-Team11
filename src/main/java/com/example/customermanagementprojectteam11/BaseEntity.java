@@ -1,4 +1,4 @@
-package com.example.customermanagementprojectteam11.admin.entity;
+package com.example.customermanagementprojectteam11;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -21,6 +21,7 @@ public class BaseEntity {
     @Column(name = "approved_at")
     private LocalDateTime approvedAt; // 관리자 승인일
     @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime modifiedAt; // 관리자 정보 수정일
     private LocalDateTime rejectedAt; // 거부 일자
 }
