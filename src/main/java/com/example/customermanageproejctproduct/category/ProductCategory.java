@@ -1,5 +1,6 @@
 package com.example.customermanageproejctproduct.category;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
@@ -12,5 +13,15 @@ public enum ProductCategory {
 
     ProductCategory(String status){
         this.foodStatus = status;
+    }
+
+    @JsonCreator
+    public static ProductCategory from(String str){
+        for(ProductCategory category : ProductCategory.values()){
+            if (category.getFoodStatus().equals(str)){
+                return category;
+            }
+        }
+        throw new IllegalStateException("일치하는 카테고리가 없습니다.");
     }
 }

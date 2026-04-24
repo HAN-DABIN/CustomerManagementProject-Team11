@@ -8,7 +8,7 @@ import lombok.Getter;
 public class AddProductRequest {
     private String productName;
     private ProductCategory category;
-    private int price;
-    private int stock;
+    private long price;
+    private long stock;
     private ProductStatus status;
 }
