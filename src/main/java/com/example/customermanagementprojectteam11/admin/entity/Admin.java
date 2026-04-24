@@ -25,7 +25,7 @@ public class Admin extends BaseEntity { //BaseEntity 상속
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
     private AdminRole role;
 
     @Column(name = "phone_number",nullable = false, length = 20)
@@ -34,15 +34,5 @@ public class Admin extends BaseEntity { //BaseEntity 상속
     @Enumerated(EnumType.STRING)
     private AdminStatus status;
 
-    private Admin(String name, String email,
-                  String password, AdminRole role,
-                   String phone_number ) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.phone_number = phone_number;
-        this.status = AdminStatus.PENDING; // 초기값 자동 설정.
-    }
 
 }
