@@ -3,6 +3,7 @@ package com.example.customermanagementprojectteam11.admin.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@Getter
 public class BaseEntity {
     // 속성
     @CreatedDate
@@ -21,21 +23,4 @@ public class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedAt; // 관리자 정보 수정일
     private LocalDateTime rejectedAt; // 거부 일자
-
-    // 기능
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getApprovedAt() {
-        return approvedAt;
-    }
-
-    public LocalDateTime getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public LocalDateTime getRejectedAt() {
-        return rejectedAt;
-    }
 }
