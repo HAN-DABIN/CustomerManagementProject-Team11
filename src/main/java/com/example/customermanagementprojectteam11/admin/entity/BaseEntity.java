@@ -26,9 +26,9 @@ public class BaseEntity {
     @Column(name = "approved_at")
     private LocalDateTime approved_at;
 
-    // 서비스에서 사용
-    public void approve(){
-        this.approved_at = LocalDateTime.now();
-    }
+//    // 서비스에서 사용
+//    public void approve(){
+//        this.approved_at = LocalDateTime.now();
+//    }
 
 }

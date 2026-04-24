@@ -41,7 +41,7 @@ public class Admin extends BaseEntity { //BaseEntity 상속
         this.password = password;
         this.role = role;
         this.phone_number = phone_number;
-        this.status = "승인 대기"; // 초기값 자동 설정
+        this.status = "승인 대기"; // 초기값 자동 설정.
     }
 
 }
