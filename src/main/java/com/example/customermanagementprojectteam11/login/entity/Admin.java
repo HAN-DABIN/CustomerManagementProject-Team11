@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Table(name = "admins")
-public class Admin {
+public class Admin extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,14 +36,8 @@ public class Admin {
     @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(); // 생성일
-
     @Column(name = "approved_at")
     private LocalDateTime approvedAt; // 가입 승인일
-
-    @Column(name = "modified_at", nullable = false)
-    private LocalDateTime modifiedAt = LocalDateTime.now(); // 정보 수정일
 
     @Column(name = "reject_reason", length = 50)
     private String rejectReason; // 가입 승인 거부 사유
