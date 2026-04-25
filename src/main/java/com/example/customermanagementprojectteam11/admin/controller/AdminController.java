@@ -18,9 +18,11 @@ public class AdminController {
     // 관리자 리스트 조회 API
     @GetMapping
     public ResponseEntity<GetAdminListResponse> findListAdmin(
-            @RequestParam(required = false) String keyword
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.findList(keyword));
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.findList(keyword, page, size));
     }
 
 

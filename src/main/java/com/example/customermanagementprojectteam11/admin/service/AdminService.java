@@ -5,6 +5,9 @@ import com.example.customermanagementprojectteam11.admin.dto.GetAdminListRespons
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,20 +20,32 @@ public class AdminService {
     // 속성
     public final AdminRepository adminRepository;
 
+    // PageRequest를 사용해 페이지 정보 생성
+    public Page<Admin> getAdminWithPaging(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return adminRepository.findAll(pageable);
+    }
+
     // 관리자 리스트 조회 기능
     @Transactional(readOnly = true)
-    public GetAdminListResponse findList(String keyword) {
+    public GetAdminListResponse findList(String keyword, int page, int size) {
+        // 페이지 기본값 1로 설정
+        if (page < 1) page = 1;
+        if (size < 1) size = 10 ;
+
+        Pageable pageable = PageRequest.of(page -1, size);
+
         // 관리자를 List에 담아서 전체 조회하기
-        List<Admin> adminList;
+        Page<Admin> adminPage;
         // 키워드가 없거나 빈칸이면 전체 조회
         if (keyword == null || keyword.isBlank()) {
-            adminList = adminRepository.findAll();
+            adminPage = adminRepository.findAll(pageable);
             // 있으면 키워드 조회
         } else {
-            adminList = adminRepository.findByNameContainingOrEmailContaining(keyword, keyword);
+            adminPage = adminRepository.findByNameContainingOrEmailContaining(keyword, keyword, pageable);
         }
         // 엔티티를 dto로 변환
-        List<GetAdminListResponse.AdminDto> adminListResponseList = adminList.stream()
+        List<GetAdminListResponse.AdminDto> adminList = adminPage.getContent().stream()
                 .map(admin -> new GetAdminListResponse.AdminDto(
                         admin.getId(),
                         admin.getName(),
@@ -41,7 +56,12 @@ public class AdminService {
                         admin.getCreatedAt(),
                         admin.getApprovedAt()
                 )).collect(Collectors.toList());
-        return new GetAdminListResponse(adminListResponseList);
+        return new GetAdminListResponse(
+                page,
+                size,
+                adminPage.getTotalElements(),
+                adminPage.getTotalPages(),
+                adminList);
 
     }
 
