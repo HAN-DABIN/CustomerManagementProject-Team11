@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Table(name = "admins")
-public class Admin extends BaseEntity {
+public class LoginAdmin extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,16 +34,14 @@ public class Admin extends BaseEntity {
     @Column(nullable = false, length = 20)
     private AdminStatus status;
 
-    @Column(name = "phone_number", nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String phoneNumber;
 
-    @Column(name = "approved_at")
     private LocalDateTime approvedAt; // 가입 승인일
 
-    @Column(name = "reject_reason", length = 50)
+    @Column(length = 50)
     private String rejectReason; // 가입 승인 거부 사유
 
-    @Column(name = "rejected_at")
     private LocalDateTime rejectedAt; // 가입 승인 거부 일자
 
     public boolean canLogin() {
