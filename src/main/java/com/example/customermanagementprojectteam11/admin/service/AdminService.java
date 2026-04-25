@@ -3,6 +3,7 @@ package com.example.customermanagementprojectteam11.admin.service;
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminDetailResponse;
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminListResponse;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
+import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class AdminService {
 
     // 관리자 리스트 조회 기능
     @Transactional(readOnly = true)
-    public GetAdminListResponse findList(String keyword, int page, int size, String sortBy, String order) {
+    public GetAdminListResponse findList(String keyword, int page, int size, String sortBy, String order, AdminRole role) {
         // 페이지 기본값 1로 설정
         if (page < 1) page = 1;
         if (size < 1) size = 10 ;
@@ -68,12 +69,17 @@ public class AdminService {
         // 관리자를 List에 담아서 전체 조회하기
         Page<Admin> adminPage;
         // 키워드가 없거나 빈칸이면 전체 조회
-        if (keyword == null || keyword.isBlank()) {
+        if (keyword == null && role == null) {
             adminPage = adminRepository.findAll(pageable);
             // 있으면 키워드 조회
-        } else {
+        } else if (role == null) {
             adminPage = adminRepository.findByNameContainingOrEmailContaining(keyword, keyword, pageable);
+        } else if (keyword == null) {
+            adminPage = adminRepository.findByRole(role, pageable);
+        } else {
+            adminPage = adminRepository.findAll(keyword, keyword, role, pageable);
         }
+
         // 엔티티를 dto로 변환
         List<GetAdminListResponse.AdminDto> adminList = adminPage.getContent().stream()
                 .map(admin -> new GetAdminListResponse.AdminDto(
