@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +29,41 @@ public class AdminService {
 
     // 관리자 리스트 조회 기능
     @Transactional(readOnly = true)
-    public GetAdminListResponse findList(String keyword, int page, int size) {
+    public GetAdminListResponse findList(String keyword, int page, int size, String sortBy, String order) {
         // 페이지 기본값 1로 설정
         if (page < 1) page = 1;
         if (size < 1) size = 10 ;
 
-        Pageable pageable = PageRequest.of(page -1, size);
+        // 파라미터 잘못된 값 들어왔을 때 예외처리 (정렬기준)
+        switch (sortBy) {
+            case "name":
+            case "email":
+            case "createdAt":
+                break;
+            default:
+                sortBy = "name";
+        }
+        // 파라미터 잘못된 값 들어왔을 때 예외처리 (정렬순서)
+        switch (order) {
+            case "asc":
+            case "desc":
+                break;
+            default:
+                order = "asc";
+        }
+
+        // 정렬 조건 생성
+        Sort sort;
+        // desc 입력하면 내림차순 정렬
+        if(order.equalsIgnoreCase("desc")) {
+            sort = Sort.by(sortBy).descending();
+            // 그 외 값은 오름차순 정렬
+        } else {
+            sort = Sort.by(sortBy).ascending();
+        }
+        // pageable 객체 생성
+        // 기본값을 1로 설정했으니 내부적 데이터는 0으로 변환하기
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
 
         // 관리자를 List에 담아서 전체 조회하기
         Page<Admin> adminPage;
@@ -56,6 +86,7 @@ public class AdminService {
                         admin.getCreatedAt(),
                         admin.getApprovedAt()
                 )).collect(Collectors.toList());
+        // 응답 dto 반환
         return new GetAdminListResponse(
                 page,
                 size,

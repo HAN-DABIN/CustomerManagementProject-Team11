@@ -18,11 +18,14 @@ public class AdminController {
     // 관리자 리스트 조회 API
     @GetMapping
     public ResponseEntity<GetAdminListResponse> findListAdmin(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size)
+            @RequestParam(required = false) String keyword, // 검색 키워드
+            @RequestParam(defaultValue = "1") int page, // 페이지번호, 요청없으면 1페이지
+            @RequestParam(defaultValue = "10") int size, // 페이지당 조회 개수, 요청없으면 기본 10개씩 조회
+            @RequestParam(defaultValue = "name") String sortBy, // 정렬기준, 기본값: 이름
+            @RequestParam(defaultValue = "asc") String order) // 정렬방향, 기본값: 오름차순
     {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.findList(keyword, page, size));
+        // 서비스에서 받은 결과 반환
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.findList(keyword, page, size, sortBy, order));
     }
 
 
