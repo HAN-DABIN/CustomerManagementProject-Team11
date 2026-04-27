@@ -29,7 +29,7 @@ public class Admin extends BaseEntity {
     @Column(nullable = false)
     private AdminStatus status = AdminStatus.PENDING; // 활성, 비활성, 정지, 승인대기, 거부 -> 초기값 승인대기
     @Column(length = 20, nullable = false)
-    private String phoneNumber;
+    private String phone_Number;
     @Column(length = 50)
     private String rejectReason; // 거부 사유
 
