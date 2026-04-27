@@ -1,15 +1,18 @@
 package com.example.customermanagementprojectteam11.admin.service;
 
+import com.example.customermanagementprojectteam11.admin.AdminSpecification;
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminDetailResponse;
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminListResponse;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
+import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +25,25 @@ public class AdminService {
     // 속성
     public final AdminRepository adminRepository;
 
-    // PageRequest를 사용해 페이지 정보 생성
-    public Page<Admin> getAdminWithPaging(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return adminRepository.findAll(pageable);
-    }
-
     // 관리자 리스트 조회 기능
     @Transactional(readOnly = true)
-    public GetAdminListResponse findList(String keyword, int page, int size, String sortBy, String order, AdminRole role) {
+    public GetAdminListResponse findList(
+            String keyword,
+            int page,
+            int size,
+            String sortBy,
+            String order,
+            AdminRole role,
+            AdminStatus status) {
+        /**
+         * 1. 잘못된 page/size 보정
+         * 2. 잘못된 sortBy/order 보정
+         * 3. 정렬 객체 생성
+         * 4. Pageable 생성
+         * 5. 검색 조건(specification) 생성
+         * 6. keyword / role / status 조건 추가
+         * 7. DB 조회
+         */
         // 페이지 기본값 1로 설정
         if (page < 1) page = 1;
         if (size < 1) size = 10 ;
@@ -52,10 +65,10 @@ public class AdminService {
             default:
                 order = "asc";
         }
-
         // 정렬 조건 생성
         Sort sort;
-        // desc 입력하면 내림차순 정렬
+
+        // desc 요청하면 내림차순 정렬
         if(order.equalsIgnoreCase("desc")) {
             sort = Sort.by(sortBy).descending();
             // 그 외 값은 오름차순 정렬
@@ -66,19 +79,24 @@ public class AdminService {
         // 기본값을 1로 설정했으니 내부적 데이터는 0으로 변환하기
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        // 관리자를 List에 담아서 전체 조회하기
-        Page<Admin> adminPage;
-        // 키워드가 없거나 빈칸이면 전체 조회
-        if (keyword == null && role == null) {
-            adminPage = adminRepository.findAll(pageable);
-            // 있으면 키워드 조회
-        } else if (role == null) {
-            adminPage = adminRepository.findByNameContainingOrEmailContaining(keyword, keyword, pageable);
-        } else if (keyword == null) {
-            adminPage = adminRepository.findByRole(role, pageable);
-        } else {
-            adminPage = adminRepository.findAll(keyword, keyword, role, pageable);
+        // Specification 생성 - 빈 조건(전체조회)부터 시작
+        Specification<Admin> spec = Specification.allOf();
+
+        // 검색키워드가 null이 아니고 비어있지 않을 때 검색조건 추가
+        if (keyword != null && !keyword.isBlank()) {
+            spec = spec.and(AdminSpecification.keyword(keyword));
         }
+        // 역할이 null이 아닐 때 역할필터 추가
+        if (role != null) {
+            spec = spec.and(AdminSpecification.role(role));
+        }
+        // 상태가 null이 아닐 때 상태필터 추가
+        if (status != null) {
+            spec = spec.and(AdminSpecification.status(status));
+        }
+
+        // 조회
+        Page<Admin> adminPage = adminRepository.findAll(spec, pageable);
 
         // 엔티티를 dto로 변환
         List<GetAdminListResponse.AdminDto> adminList = adminPage.getContent().stream()
