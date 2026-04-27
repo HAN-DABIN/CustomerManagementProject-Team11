@@ -2,6 +2,8 @@ package com.example.customermanagementprojectteam11.admin.controller;
 
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminDetailResponse;
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminListResponse;
+import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminRequest;
+import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminResponse;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.admin.service.AdminService;
@@ -26,13 +28,10 @@ public class AdminController {
             @RequestParam(defaultValue = "name") String sortBy, // 정렬기준, 기본값: 이름
             @RequestParam(defaultValue = "asc") String order, // 정렬방향, 기본값: 오름차순
             @RequestParam(required = false) AdminRole role, // 역할 필터
-            @RequestParam(required = false)AdminStatus status)
-    {
+            @RequestParam(required = false) AdminStatus status) {
         // 서비스에서 받은 결과 반환
         return ResponseEntity.status(HttpStatus.OK).body(adminService.findList(keyword, page, size, sortBy, order, role, status));
     }
-
-
 
     // 관리자 상세 조회 API
     @GetMapping("/{adminId}") // ID 값으로 관리자 상세 조회
@@ -42,4 +41,13 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.findDatail(adminId));
     }
 
+    // 관리자 정보 수정(이름, 이메일, 전화번호) API
+    @PatchMapping("/{adminId}") // ID값으로 관리자 정보 수정
+    public ResponseEntity<UpdateAdminResponse> updateAdmin(
+            @PathVariable Long adminId, // 수정할 관리자 Id
+            @RequestBody UpdateAdminRequest request) { // 수정할 내용을 json으로 전달받아 DTO 변환
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(request, adminId));
+
+
+    }
 }

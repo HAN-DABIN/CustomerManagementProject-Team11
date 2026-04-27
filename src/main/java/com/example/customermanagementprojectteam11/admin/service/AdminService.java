@@ -3,6 +3,8 @@ package com.example.customermanagementprojectteam11.admin.service;
 import com.example.customermanagementprojectteam11.admin.AdminSpecification;
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminDetailResponse;
 import com.example.customermanagementprojectteam11.admin.dto.GetAdminListResponse;
+import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminRequest;
+import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminResponse;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
@@ -140,4 +142,29 @@ public class AdminService {
         );
     }
 
+    // 관리자 정보 수정 기능
+    @Transactional
+    public UpdateAdminResponse updateAdmin(UpdateAdminRequest request, Long adminId) {
+        // adminId로 관리자 조회
+        Admin admin = adminRepository.findById(adminId)
+                // 없으면 예외 발생
+                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        // entity 값 변경
+        admin.updateAdmin(
+                request.getName(),
+                request.getEmail(),
+                request.getPhoneNumber()
+        );
+        // 응답 dto 반환
+        return new UpdateAdminResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getEmail(),
+                admin.getPhoneNumber(),
+                admin.getModifiedAt()
+        );
+
+
+
+    }
 }

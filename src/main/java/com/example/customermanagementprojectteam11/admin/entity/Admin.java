@@ -42,4 +42,10 @@ public class Admin extends BaseEntity {
         if (this.canLogin()) return null;
         return this.status.getDescription(); // 로그인 안될 때 이유 반환
     }
+
+    public void updateAdmin(String name, String email, String phoneNumber){
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 }
