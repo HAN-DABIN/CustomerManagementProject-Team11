@@ -196,4 +196,11 @@ public class AdminService {
                 admin.getModifiedAt()
         );
     }
+    // 관리자 삭제 기능 (soft delete)
+    @Transactional
+    public void deleteAdmin(Long id) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("유저를 찾을 수 없습니다"));
+        adminRepository.delete(admin);
+    }
 }

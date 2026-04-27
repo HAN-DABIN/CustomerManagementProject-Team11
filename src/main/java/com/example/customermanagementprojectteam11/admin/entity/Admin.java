@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.type.NumericBooleanConverter;
 
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "admins")
+@SoftDelete(columnName = "is_deleted", converter = NumericBooleanConverter.class)
 public class Admin extends BaseEntity {
     // 속성
     @Id

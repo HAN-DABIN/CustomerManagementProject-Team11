@@ -25,7 +25,7 @@ public class AdminController {
             @RequestParam(defaultValue = "name") String sortBy, // 정렬기준, 기본값: 이름
             @RequestParam(defaultValue = "asc") String order, // 정렬방향, 기본값: 오름차순
             @RequestParam(required = false) AdminRole role, // 역할 필터
-            @RequestParam(required = false) AdminStatus status) {
+            @RequestParam(required = false) AdminStatus status){ // 상태필터
         // 서비스에서 받은 결과 반환
         return ResponseEntity.status(HttpStatus.OK).body(adminService.findList(keyword, page, size, sortBy, order, role, status));
     }
@@ -61,5 +61,12 @@ public class AdminController {
             @RequestBody UpdateAdminStatusRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminStatus(request, adminId));
     }
-    )
+
+    // 관리자 삭제 API
+    @DeleteMapping("{adminId}") // ID값으로 관리자 삭제
+    public ResponseEntity<Void> deleteAdmin(
+            @PathVariable Long adminId) {
+        adminService.deleteAdmin(adminId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
