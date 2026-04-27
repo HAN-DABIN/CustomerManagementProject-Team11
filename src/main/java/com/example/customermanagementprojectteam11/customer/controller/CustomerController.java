@@ -1,16 +1,15 @@
 package com.example.customermanagementprojectteam11.customer.controller;
 
 import com.example.customermanagementprojectteam11.customer.dto.GetCustomerResponse;
+import com.example.customermanagementprojectteam11.customer.dto.PatchInfoRequest;
+import com.example.customermanagementprojectteam11.customer.dto.PatchInfoResponse;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.service.CustomerService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customers")
@@ -28,6 +27,12 @@ public class CustomerController {
     @GetMapping("/{id}")
     public ResponseEntity<GetCustomerResponse> getOne(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getOne(id));
+    }
+
+    //고객 정보 수정
+    @PatchMapping("/{id}")
+    public ResponseEntity<PatchInfoResponse> patchInfo(@PathVariable Long id, @RequestBody PatchInfoRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.updateInfoCustomer(id, request));
     }
 
 }

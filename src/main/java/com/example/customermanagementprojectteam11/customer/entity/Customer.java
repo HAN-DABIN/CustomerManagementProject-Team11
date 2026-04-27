@@ -38,4 +38,12 @@ public class Customer extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.status = status;
     }
+
+    //수정하기 위해 필요한 메서드 구현
+    public void updateInfoCustomer(String name, String email, String phoneNumber, String status) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+    }
 }
