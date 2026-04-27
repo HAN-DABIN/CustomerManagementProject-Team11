@@ -15,7 +15,7 @@ public class GetAdminListResponse {
     private int pageSize;
     private long totalCount;
     private int totalPages;
-    private List<AdminDto> adminDtoList;
+    private List<AdminDto> adminList;
 
     // 내부 DTO
     @Getter
