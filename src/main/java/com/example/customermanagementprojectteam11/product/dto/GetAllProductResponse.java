@@ -16,8 +16,9 @@ public class GetAllProductResponse {
     private final ProductStatus status;
     private final String userName;
     private final LocalDateTime createAt;
+    private final LocalDateTime updateAt;
 
-    public GetAllProductResponse(Long productId, String productName, ProductCategory category, long price, long stock, ProductStatus status, String userName, LocalDateTime createAt) {
+    public GetAllProductResponse(Long productId, String productName, ProductCategory category, long price, long stock, ProductStatus status, String userName, LocalDateTime createAt, LocalDateTime updateAt) {
         this.productId = productId;
         this.productName = productName;
         this.category = category;
@@ -26,5 +27,6 @@ public class GetAllProductResponse {
         this.status = status;
         this.userName = userName;
         this.createAt = createAt;
+        this.updateAt = updateAt;
     }
 }

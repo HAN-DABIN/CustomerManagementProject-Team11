@@ -26,7 +26,9 @@ public class ProductService {
                 savedProduct.getCategory(),
                 savedProduct.getPrice(),
                 savedProduct.getStock(),
-                savedProduct.getStatus()
+                savedProduct.getStatus(),
+                savedProduct.getCreateAt(),
+                savedProduct.getUpdateAt()
         );
     }
 
@@ -46,7 +48,8 @@ public class ProductService {
                         product.getStock(),
                         product.getStatus(),
                         product.getUserName(),
-                        product.getCreateAt()
+                        product.getCreateAt(),
+                        product.getUpdateAt()
                 )).toList();
         ProductPageableResponse pageInfo = new ProductPageableResponse(
                 productPage.getNumber(),
@@ -56,5 +59,59 @@ public class ProductService {
         );
 
         return new ProductInfoResponse(response, pageInfo);
+    }
+
+    @Transactional
+    public GetOneProductResponse getOne(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 상품입니다.")
+        );
+
+        return new GetOneProductResponse(
+                product.getProductName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getStock(),
+                product.getStatus(),
+                product.getCreateAt(),
+                product.getUpdateAt()
+                //product.getAdmin().getName(),
+                //product.getAdmin().getEmail()
+        );
+    }
+
+    @Transactional
+    public UpdateProductResponse update(Long productId, UpdateProductRequest request) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 상품입니다.")
+        );
+        product.update(request.getProductName(), request.getCategory(), request.getPrice());
+        return new UpdateProductResponse(
+                product.getProductName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getStock(),
+                product.getStatus(),
+                product.getCreateAt(),
+                product.getUpdateAt()
+        );
+    }
+
+    @Transactional
+    public UpdateStatusResponse updateStatus(Long productId, UpdateStatusRequest request) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 상품입니다.")
+        );
+
+        product.statusUpdate(request.getStatus());
+        return new UpdateStatusResponse(
+                product.getProductName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getStock(),
+                product.getStatus(),
+                product.getCreateAt(),
+                product.getUpdateAt()
+        );
     }
 }

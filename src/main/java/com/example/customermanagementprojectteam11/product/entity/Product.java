@@ -62,4 +62,8 @@ public class Product extends BaseEntity {
         this.category = category;
         this.price = price;
     }
+
+    public void statusUpdate(ProductStatus status){
+        this.status = status;
+    }
 }

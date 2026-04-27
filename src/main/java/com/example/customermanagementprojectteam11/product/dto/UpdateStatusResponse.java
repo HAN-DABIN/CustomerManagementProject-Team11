@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class AddProductResponse {
+public class UpdateStatusResponse {
     private final String productName;
     private final ProductCategory category;
     private final long price;
@@ -16,7 +16,7 @@ public class AddProductResponse {
     private final LocalDateTime createAt;
     private final LocalDateTime updateAt;
 
-    public AddProductResponse(String productName, ProductCategory category, long price, long stock, ProductStatus status, LocalDateTime createAt, LocalDateTime updateAt) {
+    public UpdateStatusResponse(String productName, ProductCategory category, long price, long stock, ProductStatus status, LocalDateTime createAt, LocalDateTime updateAt) {
         this.productName = productName;
         this.category = category;
         this.price = price;
