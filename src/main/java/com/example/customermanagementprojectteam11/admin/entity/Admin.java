@@ -32,4 +32,14 @@ public class Admin extends BaseEntity {
     private String phoneNumber;
     @Column(length = 50)
     private String rejectReason; // 거부 사유
+
+    public boolean canLogin() {
+        return this.status == AdminStatus.ACTIVE;    //로그인이 가능한 상태인지 판별
+    }
+
+    //로그인 실패 시 메시지
+    public String loginMessage() {
+        if (this.canLogin()) return null;
+        return this.status.getDescription(); // 로그인 안될 때 이유 반환
+    }
 }
