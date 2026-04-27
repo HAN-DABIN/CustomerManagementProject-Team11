@@ -7,20 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class AddProductRequest {
+public class GetAllProductRequest {
     @NotBlank(message = "상품명을 입력하세요")
     private String productName;
 
     @NotBlank(message = "카테고리를 입력하세요")
     private ProductCategory category;
 
-    @NotBlank(message = "가격을 입력하세요")
-    private long price;
-
     @NotBlank(message = "수량을 입력하세요")
     @Size(min = 1)
-    private long stock;
-
-    @NotBlank(message = "상품 상태를 입력하세요")
     private ProductStatus status;
 }

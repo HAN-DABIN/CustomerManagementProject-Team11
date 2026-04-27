@@ -1,4 +1,4 @@
-package com.example.customermanagementprojectteam11.customermanageproejctproduct.dto;
+package com.example.customermanagementprojectteam11.product.dto;
 
 import lombok.Getter;
 
