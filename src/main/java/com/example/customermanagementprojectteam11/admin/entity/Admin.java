@@ -43,9 +43,20 @@ public class Admin extends BaseEntity {
         return this.status.getDescription(); // 로그인 안될 때 이유 반환
     }
 
+    // 관리자 정보 수정
     public void updateAdmin(String name, String email, String phoneNumber){
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
+    }
+
+    // 관리자 역할 변경
+    public void changeRole(AdminRole role) {
+        this.role = role;
+    }
+
+    // 관리자 상태 변경
+    public void changeStatus(AdminStatus status) {
+        this.status = status;
     }
 }

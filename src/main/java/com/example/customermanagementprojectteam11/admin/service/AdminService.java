@@ -1,10 +1,7 @@
 package com.example.customermanagementprojectteam11.admin.service;
 
 import com.example.customermanagementprojectteam11.admin.AdminSpecification;
-import com.example.customermanagementprojectteam11.admin.dto.GetAdminDetailResponse;
-import com.example.customermanagementprojectteam11.admin.dto.GetAdminListResponse;
-import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminRequest;
-import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminResponse;
+import com.example.customermanagementprojectteam11.admin.dto.*;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
@@ -163,8 +160,40 @@ public class AdminService {
                 admin.getPhoneNumber(),
                 admin.getModifiedAt()
         );
+    }
+    // 관리자 역할 변경 기능
+    @Transactional
+    public UpdateAdminRoleResponse updateAdminRole(UpdateAdminRoleRequest request, Long adminId) {
+        // adminId로 관리자 조회
+        Admin admin = adminRepository.findById(adminId)
+                // 없으면 예외 발생
+                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        // 엔티티 값 요청받은 값으로 변경
+        admin.changeRole(
+                request.getRole()
+        );
+        return new UpdateAdminRoleResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getRole(),
+                admin.getModifiedAt()
+        );
+    }
 
-
-
+    // 관리자 상태 변경 기능
+    @Transactional
+    public UpdateAdminStatusResponse updateAdminStatus(UpdateAdminStatusRequest request, Long adminId) {
+        Admin admin = adminRepository.findById(adminId)
+                // 없으면 예외 발생
+                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        admin.changeStatus(
+                request.getStatus()
+        );
+        return new UpdateAdminStatusResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getStatus(),
+                admin.getModifiedAt()
+        );
     }
 }

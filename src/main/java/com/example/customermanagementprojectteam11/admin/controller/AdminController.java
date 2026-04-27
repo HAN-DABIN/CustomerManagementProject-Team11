@@ -1,9 +1,6 @@
 package com.example.customermanagementprojectteam11.admin.controller;
 
-import com.example.customermanagementprojectteam11.admin.dto.GetAdminDetailResponse;
-import com.example.customermanagementprojectteam11.admin.dto.GetAdminListResponse;
-import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminRequest;
-import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminResponse;
+import com.example.customermanagementprojectteam11.admin.dto.*;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.admin.service.AdminService;
@@ -47,7 +44,22 @@ public class AdminController {
             @PathVariable Long adminId, // 수정할 관리자 Id
             @RequestBody UpdateAdminRequest request) { // 수정할 내용을 json으로 전달받아 DTO 변환
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(request, adminId));
-
-
     }
+
+    // 관리자 역할 변경 API
+    @PatchMapping("/{adminId}/role") // ID값으로 관리자 역할 수정
+    public ResponseEntity<UpdateAdminRoleResponse> updateAdminRole(
+            @PathVariable Long adminId,
+            @RequestBody UpdateAdminRoleRequest request) { // 역할 변경된 내용을 json으로 받아 dto 변환
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(request, adminId));
+    }
+
+    // 관리자 상태 변경 API
+    @PatchMapping("/{adminId}/status") // ID값으로 관리자 상태 수정
+    public ResponseEntity<UpdateAdminStatusResponse> updateAdminStatus(
+            @PathVariable Long adminId,
+            @RequestBody UpdateAdminStatusRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminStatus(request, adminId));
+    }
+    )
 }
