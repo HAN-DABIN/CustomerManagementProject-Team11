@@ -1,23 +1,27 @@
-package com.example.customermanagementprojectteam11.customermanageproejctproduct.entity;
+package com.example.customermanagementprojectteam11.product.entity;
 
-import com.example.customermanagementprojectteam11.customermanageproejctproduct.category.ProductCategory;
-import com.example.customermanagementprojectteam11.customermanageproejctproduct.status.ProductStatus;
+import com.example.customermanagementprojectteam11.BaseEntity;
+import com.example.customermanagementprojectteam11.admin.entity.Admin;
+import com.example.customermanagementprojectteam11.product.category.ProductCategory;
+import com.example.customermanagementprojectteam11.product.status.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+
+import static com.example.customermanagementprojectteam11.product.status.ProductStatus.ON_SALE;
+import static com.example.customermanagementprojectteam11.product.status.ProductStatus.SOLD_OUT;
+
 
 @Getter
 @Entity
 @Table(name = "products")
-@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product {
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +45,10 @@ public class Product {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
+
     private String userName;
     private String userEmail;
 
@@ -56,5 +64,17 @@ public class Product {
         this.productName = productname;
         this.category = category;
         this.price = price;
+    }
+
+    public void statusUpdate(ProductStatus status){
+        this.status = status;
+    }
+
+    public void changeStatus(Long stock){
+        if(stock >= 1){
+            statusUpdate(ON_SALE);
+        }else {
+            statusUpdate(SOLD_OUT);
+        }
     }
 }
