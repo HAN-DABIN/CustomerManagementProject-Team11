@@ -1,4 +1,4 @@
-package com.example.customermanagementprojectteam11.admin.service;
+package com.example.customermanagementprojectteam11.admin.config;
 
 public class DuplicateEmailException extends RuntimeException{
     public DuplicateEmailException(String message){
