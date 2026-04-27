@@ -3,6 +3,7 @@ package com.example.customermanagementprojectteam11.product.controller;
 import com.example.customermanagementprojectteam11.product.dto.*;
 import com.example.customermanagementprojectteam11.product.service.ProductService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/add")
-    public ResponseEntity<AddProductResponse> addProduct(@RequestBody AddProductRequest request){
+    public ResponseEntity<AddProductResponse> addProduct(@Valid @RequestBody AddProductRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.add(request));
     }
 
@@ -34,12 +35,12 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}")
-    public ResponseEntity<UpdateProductResponse> update(@PathVariable Long productId, @RequestBody UpdateProductRequest request){
+    public ResponseEntity<UpdateProductResponse> update(@PathVariable Long productId, @Valid @RequestBody UpdateProductRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(productService.update(productId, request));
     }
 
     @PatchMapping("/{productId}/status")
-    public ResponseEntity<UpdateStatusResponse> updateStatus(@PathVariable Long productId, @RequestBody UpdateStatusRequest request){
+    public ResponseEntity<UpdateStatusResponse> updateStatus(@PathVariable Long productId, @Valid @RequestBody UpdateStatusRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateStatus(productId, request));
     }
 

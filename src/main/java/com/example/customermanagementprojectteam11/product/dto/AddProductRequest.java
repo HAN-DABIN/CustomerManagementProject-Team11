@@ -18,11 +18,11 @@ public class AddProductRequest {
 
     @NotNull(message = "가격을 입력하세요")
     @Min(value = 100, message = "가격은 최소 100원 이상이어야 합니다.")
-    private long price;
+    private Long price;
 
     @NotNull(message = "수량을 입력하세요")
-    @Min(value = 100, message = "수량은 최소 1개 이상이어야 합니다.")
-    private long stock;
+    @Min(value = 1, message = "수량은 최소 1개 이상이어야 합니다.")
+    private Long stock;
 
     @NotNull(message = "상품 상태를 입력하세요")
     private ProductStatus status;

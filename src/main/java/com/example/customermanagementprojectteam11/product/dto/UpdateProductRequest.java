@@ -16,5 +16,5 @@ public class UpdateProductRequest {
 
     @NotNull(message = "가격을 입력하세요")
     @Min(value = 100, message = "최소 100원 이상이어야 합니다")
-    private long price;
+    private Long price;
 }

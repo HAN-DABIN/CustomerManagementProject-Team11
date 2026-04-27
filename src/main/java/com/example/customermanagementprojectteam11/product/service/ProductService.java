@@ -2,6 +2,7 @@ package com.example.customermanagementprojectteam11.product.service;
 
 import com.example.customermanagementprojectteam11.product.dto.*;
 import com.example.customermanagementprojectteam11.product.entity.Product;
+import com.example.customermanagementprojectteam11.product.handler.ProductNotFoundException;
 import com.example.customermanagementprojectteam11.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,6 @@ public class ProductService {
     @Transactional
     public AddProductResponse add(AddProductRequest request){
         Product product = new Product(request.getProductName(), request.getCategory(), request.getPrice(), request.getStock(), request.getStatus());
-
         Product savedProduct = productRepository.save(product);
         return new AddProductResponse(
                 savedProduct.getProductName(),
@@ -39,6 +39,9 @@ public class ProductService {
                 request.getCategory(),
                 request.getStatus(),
                 pageable);
+        if(productPage == null){
+            throw new ProductNotFoundException("상품을 찾을 수 없습니다.");
+        }
         List<GetAllProductResponse> response = productPage.getContent().stream()
                 .map(product -> new GetAllProductResponse(
                         product.getProductId(),
@@ -64,7 +67,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public GetOneProductResponse getOne(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 상품입니다.")
+                () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
         );
 
         return new GetOneProductResponse(
@@ -83,7 +86,7 @@ public class ProductService {
     @Transactional
     public UpdateProductResponse update(Long productId, UpdateProductRequest request) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 상품입니다.")
+                () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
         );
         product.update(request.getProductName(), request.getCategory(), request.getPrice());
         return new UpdateProductResponse(
@@ -100,7 +103,7 @@ public class ProductService {
     @Transactional
     public UpdateStatusResponse updateStatus(Long productId, UpdateStatusRequest request) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 상품입니다.")
+                () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
         );
 
         product.statusUpdate(request.getStatus());
@@ -118,7 +121,7 @@ public class ProductService {
     @Transactional
     public void delete(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new ProductNotFoundException("존재하지 않는 일정입니다.")
         );
         productRepository.delete(product);
     }
