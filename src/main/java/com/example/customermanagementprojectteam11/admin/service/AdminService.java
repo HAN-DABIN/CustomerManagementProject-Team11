@@ -1,12 +1,12 @@
 package com.example.customermanagementprojectteam11.admin.service;
 
+import com.example.customermanagementprojectteam11.admin.config.DuplicateEmailException;
 import com.example.customermanagementprojectteam11.admin.config.PasswordEncoder;
 import com.example.customermanagementprojectteam11.admin.dto.CreateAdminRequest;
 import com.example.customermanagementprojectteam11.admin.dto.CreateAdminResponse;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.tomcat.autoconfigure.TomcatVirtualThreadsWebServerFactoryCustomizer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,6 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TomcatVirtualThreadsWebServerFactoryCustomizer tomcatVirtualThreadsWebServerFactoryCustomizer;
 
     @Transactional
     public CreateAdminResponse save(CreateAdminRequest request){
@@ -27,14 +26,14 @@ public class AdminService {
         }
 
         // 2. 비밀번호 암호화 [BCrypt 사용]
-        String encoderPassword = passwordEncoder.encode(request.getPassword());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
 
 
         // 3. 엔티티 생성(데이터 저장목적 request 단계 + 암호화된 비번 저장)
         Admin admin = new Admin(
                 request.getName(),
                 request.getEmail(),
-                request.getPassword(),
+                encodedPassword, // 암호화된 비번으로 저장
                 request.getRole(),
                 request.getPhoneNumber()
                 );
