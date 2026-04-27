@@ -1,8 +1,6 @@
 package com.example.customermanagementprojectteam11.customer.dto;
 
-import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import lombok.Getter;
-
 import java.util.List;
 
 @Getter
