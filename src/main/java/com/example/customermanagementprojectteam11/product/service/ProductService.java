@@ -61,7 +61,7 @@ public class ProductService {
         return new ProductInfoResponse(response, pageInfo);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public GetOneProductResponse getOne(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 상품입니다.")
@@ -113,5 +113,13 @@ public class ProductService {
                 product.getCreateAt(),
                 product.getUpdateAt()
         );
+    }
+
+    @Transactional
+    public void delete(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        productRepository.delete(product);
     }
 }

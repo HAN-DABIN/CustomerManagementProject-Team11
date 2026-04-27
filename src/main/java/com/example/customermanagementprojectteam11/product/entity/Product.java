@@ -13,6 +13,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
+import static com.example.customermanagementprojectteam11.product.status.ProductStatus.ON_SALE;
+import static com.example.customermanagementprojectteam11.product.status.ProductStatus.SOLD_OUT;
+
 
 @Getter
 @Entity
@@ -65,5 +68,13 @@ public class Product extends BaseEntity {
 
     public void statusUpdate(ProductStatus status){
         this.status = status;
+    }
+
+    public void changeStatus(Long stock){
+        if(stock >= 1){
+            statusUpdate(ON_SALE);
+        }else {
+            statusUpdate(SOLD_OUT);
+        }
     }
 }

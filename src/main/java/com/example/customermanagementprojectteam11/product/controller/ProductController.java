@@ -4,6 +4,7 @@ import com.example.customermanagementprojectteam11.product.dto.*;
 import com.example.customermanagementprojectteam11.product.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -37,8 +38,14 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productService.update(productId, request));
     }
 
-    @PatchMapping("/{productId}")
+    @PatchMapping("/{productId}/status")
     public ResponseEntity<UpdateStatusResponse> updateStatus(@PathVariable Long productId, @RequestBody UpdateStatusRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateStatus(productId, request));
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> delete(@PathVariable Long productId){
+        productService.delete(productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
