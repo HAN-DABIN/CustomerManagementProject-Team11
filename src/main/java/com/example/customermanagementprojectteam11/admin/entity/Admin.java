@@ -39,13 +39,16 @@ public class Admin extends BaseEntity {
     private String rejectReason; // 거부 사유
 
     public boolean canLogin() {
+
         return this.status == AdminStatus.ACTIVE;    //로그인이 가능한 상태인지 판별
     }
 
     //로그인 실패 시 메시지
     public String loginMessage() {
         if (this.canLogin()) return null;
-        return this.status.getDescription(); // 로그인 안될 때 이유 반환
+
+        // 각 상태별 메시지 출력
+        return this.status.getDescription() + " 상태입니다.";
     }
 
     // 관리자 정보 수정
