@@ -1,0 +1,27 @@
+package com.example.customermanagementprojectteam11.customermanageproejctproduct.category;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Getter;
+
+@Getter
+public enum ProductCategory {
+    ELECTRONIC("전자기기"),
+    CLOTHES("의류"),
+    FOOD("식품");
+
+    private final String foodStatus;
+
+    ProductCategory(String status){
+        this.foodStatus = status;
+    }
+
+    @JsonCreator
+    public static ProductCategory from(String str){
+        for(ProductCategory category : ProductCategory.values()){
+            if (category.getFoodStatus().equals(str)){
+                return category;
+            }
+        }
+        throw new IllegalStateException("일치하는 카테고리가 없습니다.");
+    }
+}

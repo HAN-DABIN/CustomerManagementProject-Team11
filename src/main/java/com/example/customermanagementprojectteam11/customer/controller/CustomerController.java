@@ -3,9 +3,7 @@ package com.example.customermanagementprojectteam11.customer.controller;
 import com.example.customermanagementprojectteam11.customer.dto.GetCustomerResponse;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoRequest;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoResponse;
-import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.service.CustomerService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +31,13 @@ public class CustomerController {
     @PatchMapping("/{id}")
     public ResponseEntity<PatchInfoResponse> patchInfo(@PathVariable Long id, @RequestBody PatchInfoRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.updateInfoCustomer(id, request));
+    }
+
+    //고객 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    customerService.delete(id);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

@@ -24,4 +24,12 @@ public class BaseEntity {
     @Column(nullable = false)
     private LocalDateTime modifiedAt; // 관리자 정보 수정일
     private LocalDateTime rejectedAt; // 거부 일자
+
+    // 캡슐화 유지를 하며 자식 사용
+    protected void approveStatus(LocalDateTime time) {
+        this.approvedAt = time;
+    }
+    protected void rejectStatus(LocalDateTime time) {
+        this.rejectedAt = time;
+    }
 }
