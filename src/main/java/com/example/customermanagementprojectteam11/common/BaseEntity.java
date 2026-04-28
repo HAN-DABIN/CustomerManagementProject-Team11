@@ -1,4 +1,4 @@
-package com.example.customermanagementprojectteam11;
+package com.example.customermanagementprojectteam11.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
