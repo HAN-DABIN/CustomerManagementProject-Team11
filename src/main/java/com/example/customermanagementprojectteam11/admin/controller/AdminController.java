@@ -69,4 +69,14 @@ public class AdminController {
         adminService.deleteAdmin(adminId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    // 관리자 가입 승인 API (승인대기 -> 활성)
+    @PatchMapping("/{adminId}/approve") // ID값으로 관리자 상태 변경 (승인대기 -> 활성)
+    public ResponseEntity<ApproveAdminResponse> approveAdmin(
+            @PathVariable Long adminId) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.approveAdminStatus(adminId));
+
+    }
+
+
 }
