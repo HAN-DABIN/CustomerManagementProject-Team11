@@ -33,4 +33,9 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
+
+    @ExceptionHandler(AdminException.class)
+    public ResponseEntity<String> handleAdminNotFoundExceptioin(AdminNotFoundException ex){
+        return ResponseEntity.status(ex.getStatus()).body(ex.getMessage());
+    }
 }
