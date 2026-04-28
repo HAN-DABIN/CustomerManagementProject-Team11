@@ -45,7 +45,7 @@ public class AdminService {
          */
         // 페이지 기본값 1로 설정
         if (page < 1) page = 1;
-        if (size < 1) size = 10 ;
+        if (size < 1) size = 10;
 
         // 파라미터 잘못된 값 들어왔을 때 예외처리 (정렬기준)
         switch (sortBy) {
@@ -68,7 +68,7 @@ public class AdminService {
         Sort sort;
 
         // desc 요청하면 내림차순 정렬
-        if(order.equalsIgnoreCase("desc")) {
+        if (order.equalsIgnoreCase("desc")) {
             sort = Sort.by(sortBy).descending();
             // 그 외 값은 오름차순 정렬
         } else {
@@ -161,6 +161,7 @@ public class AdminService {
                 admin.getModifiedAt()
         );
     }
+
     // 관리자 역할 변경 기능
     @Transactional
     public UpdateAdminRoleResponse updateAdminRole(UpdateAdminRoleRequest request, Long adminId) {
@@ -200,6 +201,7 @@ public class AdminService {
                 admin.getModifiedAt()
         );
     }
+
     // 관리자 삭제 기능 (soft delete)
     @Transactional
     public void deleteAdmin(Long id) {
@@ -215,10 +217,10 @@ public class AdminService {
     @Transactional
     public ApproveAdminResponse approveAdminStatus(Long adminId) {
         Admin admin = adminRepository.findById(adminId)
-        // 없으면 예외 발생
+                // 없으면 예외 발생
                 .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
         // 관리자의 상태가 승인대기 상태가 아니라면
-        if(admin.getStatus() != AdminStatus.PENDING) {
+        if (admin.getStatus() != AdminStatus.PENDING) {
             // 예외 발생
             throw new IllegalStateException("승인대기 상태에서만 승인이 가능합니다.");
         }
@@ -233,6 +235,34 @@ public class AdminService {
                 admin.getRole(),
                 admin.getStatus(),
                 admin.getApprovedAt()
+        );
+    }
+
+    // 관리자 승인 거부 기능
+    @Transactional
+    public RejectAdminResponse rejectAdminStatus(RejectAdminReasonRequest request, Long adminId) {
+        Admin admin = adminRepository.findById(adminId)
+                // 없으면 예외 발생
+                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        // 관리자의 상태가 승인대기 상태가 아니라면
+        if (admin.getStatus() != AdminStatus.PENDING) {
+            // 예외 발생
+            throw new IllegalStateException("승인대기 상태에서만 승인거부가 가능합니다.");
+        }
+        // 엔티티에서 승인거부 및 거절 사유 업데이트 요청하기
+        admin.reject(
+                request.getRejectReason()
+        );
+        // 응답 dto 반환
+        return new RejectAdminResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getEmail(),
+                admin.getPhoneNumber(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getRejectReason(),
+                admin.getRejectedAt()
         );
     }
 }

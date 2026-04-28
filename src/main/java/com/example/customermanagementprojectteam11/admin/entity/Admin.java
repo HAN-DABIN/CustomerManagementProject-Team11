@@ -70,4 +70,11 @@ public class Admin extends BaseEntity {
         this.status = AdminStatus.ACTIVE;
         approveStatus(LocalDateTime.now());
     }
+
+    // 관리자 가입 거절
+    public void reject(String rejectReason) {
+        this.status = AdminStatus.REJECTED;
+        this.rejectReason = rejectReason;
+        rejectStatus(LocalDateTime.now());
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.customermanagementprojectteam11.product.category;
 
-import com.example.customermanagementprojectteam11.product.status.ProductStatus;
+import com.example.customermanagementprojectteam11.customermanageproejctproduct.status.ProductStatus;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 

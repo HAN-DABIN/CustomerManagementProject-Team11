@@ -78,5 +78,13 @@ public class AdminController {
 
     }
 
+    // 관리자 가입 거절 API (승인대기 -> 거절)
+    @PatchMapping("/{adminId}/reject")
+    public ResponseEntity<RejectAdminResponse> rejectAdmin(
+            @PathVariable Long adminId,
+            @RequestBody RejectAdminReasonRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.rejectAdminStatus(request, adminId));
+    }
+
 
 }
