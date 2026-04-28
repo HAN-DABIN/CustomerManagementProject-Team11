@@ -31,19 +31,4 @@ public class AdminLoginService {
 
     }
 
-//    //계정 상태 종류 ( 비활성, 정지, 승인대기, 거부)
-//    private void statusType(Admin admin) {
-//        switch (admin.getStatus()) {
-//            case PENDING:
-//                throw new IllegalStateException("계정 승인 대기 중입니다.");
-//            case REJECTED:
-//                throw new IllegalStateException("계정 신청이 거부되었습니다.");
-//            case SUSPENDED:
-//                throw new IllegalStateException("계정이 정지되었습니다.");
-//            case INACTIVE:
-//                throw new IllegalStateException("비활성화된 계정입니다.");
-//            default:
-//                throw new IllegalStateException("로그인이 불가능한 상태입니다.");
-//        }
-//    }
 }
