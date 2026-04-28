@@ -1,6 +1,7 @@
 package com.example.customermanagementprojectteam11.customer.controller;
 
 import com.example.customermanagementprojectteam11.customer.dto.GetCustomerResponse;
+import com.example.customermanagementprojectteam11.customer.dto.ListCustomerResponse;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoRequest;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoResponse;
 import com.example.customermanagementprojectteam11.customer.service.CustomerService;
@@ -15,11 +16,20 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
     private final CustomerService customerService;
 
-//    //전체 조회(다건 수정 중 주석 처리)
-//    @GetMapping
-//    public void getAll() {
-//
-//    }
+    //전체 조회(다건 수정 중 주석 처리)
+    @GetMapping
+    public ResponseEntity<ListCustomerResponse> getCustomerList(
+            @RequestParam(required = false) String keyword, //없을 수 있다.
+            @RequestParam(defaultValue = "1") int page, // 안 보내면 1
+            @RequestParam(defaultValue = "10") int size, // 안 보내면 10
+            @RequestParam(defaultValue = "createdAt") String sortBy, // 안 보내면 createdAt
+            @RequestParam(defaultValue = "asc") String direction, // 안 보내면 asc 정렬
+            @RequestParam(required = false) String status // 없을 수도 있다.
+    ) {
+        return ResponseEntity.ok(
+                customerService.getCustomerList(keyword, page, size, sortBy, direction, status)
+        );
+    }
 
     //단건 조회
     @GetMapping("/{id}")
