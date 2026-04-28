@@ -70,11 +70,12 @@ public class Product extends BaseEntity {
         this.status = status;
     }
 
-    public void changeStatus(Long stock){
+    public boolean changeStatus(Long stock){
         if(stock >= 1){
             statusUpdate(ON_SALE);
         }else {
             statusUpdate(SOLD_OUT);
         }
+        return true;
     }
 }
