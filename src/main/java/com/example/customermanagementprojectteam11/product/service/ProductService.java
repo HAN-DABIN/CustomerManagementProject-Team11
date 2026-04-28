@@ -82,9 +82,9 @@ public class ProductService {
                 product.getStock(),
                 product.getStatus(),
                 product.getCreateAt(),
-                product.getUpdateAt()
-                //product.getAdmin().getName(),
-                //product.getAdmin().getEmail()
+                product.getUpdateAt(),
+                product.getAdmin().getName(),
+                product.getAdmin().getEmail()
         );
     }
 
