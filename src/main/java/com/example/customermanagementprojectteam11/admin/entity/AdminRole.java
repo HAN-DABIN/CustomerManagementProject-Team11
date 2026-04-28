@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum AdminRole {
-    SUPER_ADMIN("슈퍼관리자"),
-    OPERATOR("운영관리자"),
-    CS_ADMIN("CS관리자");
+    SUPER_ADMIN("\"SUPER_ADMIN\""),
+    OPERATOR("\"OPERATOR\""),
+    CS_ADMIN("\"CS_ADMIN\"");
 
     private final String description;
 
