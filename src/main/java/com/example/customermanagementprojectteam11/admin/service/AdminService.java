@@ -4,16 +4,16 @@ import com.example.customermanagementprojectteam11.admin.config.DuplicateEmailEx
 import com.example.customermanagementprojectteam11.admin.config.PasswordEncoder;
 import com.example.customermanagementprojectteam11.admin.dto.CreateAdminRequest;
 import com.example.customermanagementprojectteam11.admin.dto.CreateAdminResponse;
+import com.example.customermanagementprojectteam11.admin.dto.GetAdminResponse;
 import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminResponse;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
+import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
-import jakarta.persistence.metamodel.SingularAttribute;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -60,14 +60,19 @@ public class AdminService {
     @Transactional
     public UpdateAdminResponse approveAdmin(Long id) {
 
-        // 1. Id로 관리자 찾기
+        // 1. 존재하지 않는 Id일 경우 에러 던짐(404)
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 관리자가 존재하지 않습니다."));
 
-        // 2. 상태를 승인완료로 변경
+        // 2. 이미 승인처리가 된 사람인지 확인(400)
+        if (admin.getStatus() == AdminStatus.APPROVED){
+            throw new IllegalStateException("이미 승인처리가 완료된 관리자 입니다.");
+        }
+
+        // 3. 상태를 승인완료로 변경
         admin.approve();
 
-        // 3. Response dto로 변환해서 반환
+        // 4. Response dto로 변환해서 반환
         return UpdateAdminResponse.builder()
                 .id(admin.getId())
                 .name(admin.getName())
@@ -75,5 +80,13 @@ public class AdminService {
                 .status(admin.getStatus())
                 .build();
 
+    }
+    // 목록 조회
+    @Transactional(readOnly = true)
+    public List<GetAdminResponse> getPendingAdmins() {
+        return adminRepository.findAllByStatus(AdminStatus.PENDING)
+                .stream()
+                .map(GetAdminResponse::from)
+                .toList();
     }
 }

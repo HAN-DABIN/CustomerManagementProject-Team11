@@ -1,10 +1,7 @@
 package com.example.customermanagementprojectteam11.admin.dto;
 
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +25,7 @@ public class CreateAdminRequest {
     @Pattern(regexp = "^010-\\d{4}-\\d{4}$", message = "전화번호 형식(010-XXXX-XXXX)을 맞춰주세요.")
     private String phoneNumber;
 
+    @NotNull(message = "관리자 역할을 선택해주세요.")
     private AdminRole role;
 
 }

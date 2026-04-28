@@ -12,25 +12,22 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-public class UpdateAdminResponse {
-
+public class GetAdminResponse {
     private final Long id;
     private final String name;
     private final String email;
     private final AdminRole role;
     private final AdminStatus status;
-    private final LocalDateTime createdAt;
+    private final LocalDateTime createdAt; //  신청 날짜 확인용
 
-
-
-    public static UpdateAdminResponse from(Admin admin) {
-        return UpdateAdminResponse.builder()
+    public static GetAdminResponse from(Admin admin){
+        return GetAdminResponse.builder()
                 .id(admin.getId())
                 .name(admin.getName())
-                .email(admin.getEmail()) // 이메일 추가
+                .email(admin.getEmail())
                 .role(admin.getRole())
                 .status(admin.getStatus())
-                .createdAt(admin.getCreatedAt()) // 신청날짜 추가
+                .createdAt(admin.getCreatedAt())
                 .build();
     }
 

@@ -47,7 +47,7 @@ public class Admin extends BaseEntity {
         this.status = AdminStatus.PENDING; // 초기값 설정+ 회원가입 직후에는 로그인 못하게 막음
     }
     public void approve(){
-        this.status = AdminStatus.APPROVED;
+        this.status = AdminStatus.ACTIVE;
     }
 
 
