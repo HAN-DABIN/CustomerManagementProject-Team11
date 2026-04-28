@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.type.NumericBooleanConverter;
 
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "admins")
+@SoftDelete(columnName = "is_deleted", converter = NumericBooleanConverter.class)
 public class Admin extends BaseEntity {
     // 속성
     @Id
@@ -44,5 +47,22 @@ public class Admin extends BaseEntity {
 
         // 각 상태별 메시지 출력
         return this.status.getDescription() + " 상태입니다.";
+    }
+
+    // 관리자 정보 수정
+    public void updateAdmin(String name, String email, String phoneNumber){
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    // 관리자 역할 변경
+    public void changeRole(AdminRole role) {
+        this.role = role;
+    }
+
+    // 관리자 상태 변경
+    public void changeStatus(AdminStatus status) {
+        this.status = status;
     }
 }
