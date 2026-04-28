@@ -1,6 +1,8 @@
 package com.example.customermanagementprojectteam11.customer.service;
 
 import com.example.customermanagementprojectteam11.customer.dto.GetCustomerResponse;
+import com.example.customermanagementprojectteam11.customer.dto.PatchInfoRequest;
+import com.example.customermanagementprojectteam11.customer.dto.PatchInfoResponse;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.repository.CustomerRepository;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,33 @@ public class CustomerService {
         );
         return response;
     }
+
+    //고객 정보 수정(이름, 이메일, 전화번호)
+    //변경 감지 활용
+    @Transactional
+    public PatchInfoResponse updateInfoCustomer(Long id, PatchInfoRequest request) {
+        //1. ID 찾고 예외처리
+        Customer customer = findByIdOrThrow(id);
+
+        //2. 요청 받기, 찾은 ID 새 값으로 변경 진행
+        customer.updateInfoCustomer(
+                request.getName(),
+                request.getEmail(),
+                request.getPhoneNumber(),
+                request.getStatus()
+        );
+
+        //3. 응답 DTO 생성
+        PatchInfoResponse response = new PatchInfoResponse(
+                customer.getName(),
+                customer.getEmail(),
+                customer.getPhoneNumber(),
+                customer.getStatus()
+        );
+
+        return response;
+    }
+
 
 
 //    //고객 리스트 조회(다건수정중)
