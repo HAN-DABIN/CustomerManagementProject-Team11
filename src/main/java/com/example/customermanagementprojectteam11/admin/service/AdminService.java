@@ -172,6 +172,7 @@ public class AdminService {
         admin.changeRole(
                 request.getRole()
         );
+        // 응답 dto 반환
         return new UpdateAdminRoleResponse(
                 admin.getId(),
                 admin.getName(),
@@ -183,12 +184,15 @@ public class AdminService {
     // 관리자 상태 변경 기능
     @Transactional
     public UpdateAdminStatusResponse updateAdminStatus(UpdateAdminStatusRequest request, Long adminId) {
+        // adminId로 관리자 조회
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
                 .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        // 엔티티에 상태 변경 요청
         admin.changeStatus(
                 request.getStatus()
         );
+        // 응답 dto 반환
         return new UpdateAdminStatusResponse(
                 admin.getId(),
                 admin.getName(),
@@ -199,8 +203,36 @@ public class AdminService {
     // 관리자 삭제 기능 (soft delete)
     @Transactional
     public void deleteAdmin(Long id) {
+        // adminId로 관리자 조회
         Admin admin = adminRepository.findById(id)
+                // 없으면 예외처리
                 .orElseThrow(() -> new IllegalStateException("유저를 찾을 수 없습니다"));
+        // 관리자 삭제 -> is_delete에 업데이트 댐
         adminRepository.delete(admin);
+    }
+
+    // 관리자 가입 승인 기능
+    @Transactional
+    public ApproveAdminResponse approveAdminStatus(Long adminId) {
+        Admin admin = adminRepository.findById(adminId)
+        // 없으면 예외 발생
+                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        // 관리자의 상태가 승인대기 상태가 아니라면
+        if(admin.getStatus() != AdminStatus.PENDING) {
+            // 예외 발생
+            throw new IllegalStateException("승인대기 상태에서만 승인이 가능합니다.");
+        }
+        // 엔티티에서 승인상태 요청하기
+        admin.approve();
+        // 응답 dto 반환
+        return new ApproveAdminResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getEmail(),
+                admin.getPhoneNumber(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getApprovedAt()
+        );
     }
 }
