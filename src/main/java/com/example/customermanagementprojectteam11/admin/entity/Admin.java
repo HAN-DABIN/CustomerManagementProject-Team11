@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SoftDelete;
 import org.hibernate.type.NumericBooleanConverter;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -64,5 +66,11 @@ public class Admin extends BaseEntity {
     // 관리자 상태 변경
     public void changeStatus(AdminStatus status) {
         this.status = status;
+    }
+
+    // 관리자 가입 승인
+    public void approve() {
+        this.status = AdminStatus.ACTIVE;
+        approveStatus(LocalDateTime.now());
     }
 }

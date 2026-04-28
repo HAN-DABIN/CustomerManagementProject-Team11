@@ -69,7 +69,18 @@ public class CustomerService {
                 customer.getStatus()
         );
 
+        //응답 DTO 반환
         return response;
+    }
+
+    //고객 삭제
+    @Transactional
+    public void delete(Long id) {
+        //1. 삭제할 데이터 찾기, 없으면 예외처리
+        Customer customer = findByIdOrThrow(id);
+
+        //2. 삭제하기
+        customerRepository.deleteById(id);
     }
 
 
