@@ -1,6 +1,6 @@
 package com.example.customermanagementprojectteam11.customer.entity;
 
-import com.example.customermanagementprojectteam11.BaseEntity;
+import com.example.customermanagementprojectteam11.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
