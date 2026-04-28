@@ -1,7 +1,9 @@
 package com.example.customermanagementprojectteam11.product.service;
 
+import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.product.dto.*;
 import com.example.customermanagementprojectteam11.product.entity.Product;
+import com.example.customermanagementprojectteam11.product.handler.AdminNotFoundException;
 import com.example.customermanagementprojectteam11.product.handler.ProductNotFoundException;
 import com.example.customermanagementprojectteam11.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +71,9 @@ public class ProductService {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
         );
+        if(product.getAdmin().getStatus() != AdminStatus.ACTIVE){
+            throw new AdminNotFoundException("등록된 관리자가 없습니다.");
+        }
 
         return new GetOneProductResponse(
                 product.getProductName(),
@@ -77,9 +82,9 @@ public class ProductService {
                 product.getStock(),
                 product.getStatus(),
                 product.getCreateAt(),
-                product.getUpdateAt()
-                //product.getAdmin().getName(),
-                //product.getAdmin().getEmail()
+                product.getUpdateAt(),
+                product.getAdmin().getName(),
+                product.getAdmin().getEmail()
         );
     }
 
