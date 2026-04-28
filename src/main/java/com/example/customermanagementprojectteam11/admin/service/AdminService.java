@@ -305,4 +305,20 @@ public class AdminService {
                 admin.getRejectedAt()
         );
     }
+
+    // 내 프로필 조회 기능
+    @Transactional(readOnly = true)
+    public GetMyProfileResponse getMyProfile(Long adminId) {
+        // 엔티티에서 로그인된 아이디 찾기
+        Admin admin = adminRepository.findById(adminId)
+                // 없으면 예외 발생
+                .orElseThrow(() ->
+                        new IllegalStateException("관리자 정보를 찾을 수 없습니다."));
+        return new GetMyProfileResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getEmail(),
+                admin.getPhoneNumber()
+        );
+    }
 }

@@ -4,6 +4,8 @@ import com.example.customermanagementprojectteam11.admin.dto.*;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.admin.service.AdminService;
+import com.example.customermanagementprojectteam11.login.dto.SessionAdmin;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -93,5 +95,18 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.rejectAdminStatus(request, adminId));
     }
 
+    // 내 프로필 조회
+    @GetMapping("/me")
+    public ResponseEntity<GetMyProfileResponse> getMyProfile(
+            HttpSession session) { // 로그인 세션 정보 받기
+        // 세션에 저장된 로그인 관리자 정보 꺼내고
+        SessionAdmin loginAdmin = (SessionAdmin) session.getAttribute("loginAdmin");
+        // 만약 로그인이 안 된 상태면 401 반환하기
+        if (loginAdmin == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        // 로그인 한 관리자 id를 서비스로 전달해서 프로필 조회
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getMyProfile(loginAdmin.getId()));
+    }
 
 }
