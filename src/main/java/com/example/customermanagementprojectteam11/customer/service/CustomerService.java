@@ -1,6 +1,7 @@
 package com.example.customermanagementprojectteam11.customer.service;
 
 import com.example.customermanagementprojectteam11.customer.dto.GetCustomerResponse;
+import com.example.customermanagementprojectteam11.customer.dto.ListCustomerResponse;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoRequest;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoResponse;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
@@ -10,7 +11,13 @@ import org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+
+import java.util.List;
 
 
 @Service
@@ -83,28 +90,80 @@ public class CustomerService {
         customerRepository.deleteById(id);
     }
 
+    // 고객 리스트 조회
+    @Transactional(readOnly = true)
+    public ListCustomerResponse getCustomerList(
+            // 1. 입력값 받기
+            // 컨트롤러가 @RequestParam으로 받은 값을 서비스로 넘겨준 것
+            String keyword,   // 검색 키워드 (이름 또는 이메일)
+            int page,         // 페이지 번호 (사용자 기준 1페이지부터 시작)
+            int size,         // 페이지당 개수
+            String sortBy,    // 정렬 기준 (name, email, createdAt 등)
+            String direction, // 정렬 방향 (asc, desc)
+            String status     // 상태 필터
+    ) {
+
+        // 2. 페이지네이션 + 정렬 조건 만들기
+        // 사용자는 1페이지부터 생각하지만, Spring Pageable은 0페이지부터 시작하므로 page - 1 해준다.
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                Sort.by(Sort.Direction.fromString(direction), sortBy)
+        );
+
+        // 3. 조건에 따라 조회 결과를 담을 변수 만들기
+        // 이번에는 전체 List가 아니라 Page<Customer>로 받는다.
+        // 이유: 실제 데이터 목록 + 전체 개수 + 전체 페이지 수를 같이 얻기 위해서
+        Page<Customer> customerPage;
+
+        // 경우 1. 검색어 없음 + 상태 없음
+        // => 전체 고객 목록 조회
+        if ((keyword == null || keyword.isBlank()) && (status == null || status.isBlank())) {
+            customerPage = customerRepository.findAll(pageable);
+
+            // 경우 2. 검색어 있음 + 상태 없음
+            // => 이름 또는 이메일에 keyword가 포함된 고객 조회
+        } else if (keyword != null && !keyword.isBlank() && (status == null || status.isBlank())) {
+            customerPage = customerRepository.findByNameContainingOrEmailContaining(keyword, keyword, pageable);
+
+            // 경우 3. 검색어 없음 + 상태 있음
+            // => 상태가 일치하는 고객만 조회
+        } else if ((keyword == null || keyword.isBlank()) && status != null && !status.isBlank()) {
+            customerPage = customerRepository.findByStatus(status, pageable);
+
+            // 경우 4. 검색어 있음 + 상태 있음
+            // => 상태도 일치하고, 이름 또는 이메일에 keyword가 포함된 고객 조회
+        } else {
+            customerPage = customerRepository
+                    .findByStatusAndNameContainingOrStatusAndEmailContaining(
+                            status, keyword, status, keyword, pageable
+                    );
+        }
+
+        // 4. 조회된 엔티티 목록만 꺼내서 내부 DTO로 변환하기
+        // customerPage.getContent() 는 현재 페이지에 들어있는 고객 목록만 꺼내는 것
+        List<GetCustomerResponse> customers = customerPage.getContent().stream()
+                .map(customer -> new GetCustomerResponse(
+                        customer.getId(),
+                        customer.getName(),
+                        customer.getEmail(),
+                        customer.getPhoneNumber(),
+                        customer.getStatus(),
+                        customer.getCreatedAt()
+                ))
+                .toList();
+
+        // 5. 외부 DTO로 감싸서 반환하기
+        return new ListCustomerResponse(
+                customerPage.getNumber() + 1,      // 현재 페이지 (Spring은 0부터라서 다시 +1)
+                customerPage.getSize(),            // 페이지당 개수
+                (int) customerPage.getTotalElements(), // 전체 고객 수
+                customerPage.getTotalPages(),      // 전체 페이지 수
+                customers                          // 현재 페이지의 고객 목록
+        );
+    }
 
 
-//    //고객 리스트 조회(다건수정중)
-//    @Transactional(readOnly = true)
-//    public List<GetCustomerResponse> getAll() {
-//
-//        //1. 데이터 베이스에 담긴 고객 리스트 가져오기
-//        //엔티티를 다 찾아와준다.
-//        List<Customer> customerList = customerRepository.findAll();
-//
-//        //2. stream 사용하여 배열 안에 있는 모든 값에 하나한 접근 -> 지정한 방식으로 변환
-//        return customerList.stream().map(customer -> new GetCustomerResponse(
-//                                            //customer -> 응답 DTO로 변환
-//                customer.getId(),
-//                customer.getName(),
-//                customer.getEmail(),
-//                customer.getPhoneNumber(),
-//                customer.getStatus(),
-//                customer.getCreatedAt()
-//        )).toList(); //리스트로 만들어주기
-//
-//    }
 
 
 
