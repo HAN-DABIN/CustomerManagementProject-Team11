@@ -2,11 +2,15 @@ package com.example.customermanagementprojectteam11.admin.dto;
 
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class CreateAdminRequest {
 
     @NotBlank(message = "이름은 필수 입력 항목입니다.")

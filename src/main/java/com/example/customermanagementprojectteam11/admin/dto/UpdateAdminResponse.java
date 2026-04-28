@@ -1,6 +1,5 @@
 package com.example.customermanagementprojectteam11.admin.dto;
 
-import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import lombok.AllArgsConstructor;
@@ -21,17 +20,5 @@ public class UpdateAdminResponse {
     private final AdminStatus status;
     private final LocalDateTime createdAt;
 
-
-
-    public static UpdateAdminResponse from(Admin admin) {
-        return UpdateAdminResponse.builder()
-                .id(admin.getId())
-                .name(admin.getName())
-                .email(admin.getEmail()) // 이메일 추가
-                .role(admin.getRole())
-                .status(admin.getStatus())
-                .createdAt(admin.getCreatedAt()) // 신청날짜 추가
-                .build();
-    }
 
 }
