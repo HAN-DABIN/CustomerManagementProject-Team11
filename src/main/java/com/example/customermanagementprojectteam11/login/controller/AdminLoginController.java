@@ -27,8 +27,8 @@ public class AdminLoginController {
     //관리자 로그인
     @PostMapping("/admins/login")
     public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest request, HttpSession session) { // 사용자가 보낸 이메일이랑 비번 데이터, 세션 객체
-        Admin admin = adminLoginService.Login(request);
+            @Valid @RequestBody LoginRequest request, BindingResult, bindingResult, HttpSession session) { // 사용자가 보낸 이메일이랑 비번 데이터, 세션 객체
+        Admin admin = adminLoginService.Login(request);  // 검증 통과시
         SessionAdmin sessionAdmin = new SessionAdmin(admin.getId(), admin.getEmail());
         session.setAttribute("loginAdmin", sessionAdmin);   // 세션에 로그인 정보보관
         session.setMaxInactiveInterval(60*60*24); // 세션 유효시간 24시간 설정
