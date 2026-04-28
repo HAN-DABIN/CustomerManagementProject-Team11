@@ -1,6 +1,6 @@
 package com.example.customermanagementprojectteam11.admin.entity;
 
-import com.example.customermanagementprojectteam11.BaseEntity;
+import com.example.customermanagementprojectteam11.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,6 +37,18 @@ public class Admin extends BaseEntity {
     private String phoneNumber;
     @Column(length = 50)
     private String rejectReason; // 거부 사유
+
+    // Admin.java 내부
+    public Admin(String name, String email, String password, AdminRole role, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
+        this.status = AdminStatus.PENDING; // 초기값 설정+ 회원가입 직후에는 로그인 못하게 막음
+    }
+
+
 
     public boolean canLogin() {
         return this.status == AdminStatus.ACTIVE;    //로그인이 가능한 상태인지 판별
