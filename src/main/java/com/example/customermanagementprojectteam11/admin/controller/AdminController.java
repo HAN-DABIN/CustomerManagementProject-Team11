@@ -121,8 +121,20 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateMyProfile(request, loginAdmin.getId()));
+    }
 
-
+    // 비밀번호 변경 API
+    @PatchMapping("/me/password")
+    public ResponseEntity<UpdateMyPasswordResponse> updateMyPassword(
+            HttpSession session, // 로그인 세션 정보 받기
+            @RequestBody UpdateMyPasswordRequest request){ // 비밀번호 변경 바디 받기
+        // 세션에 저장된 로그인 관리자 정보 꺼내고
+        SessionAdmin loginAdmin = (SessionAdmin) session.getAttribute("loginAdmin");
+        // 만약 로그인이 안 된 상태면 401 반환하기
+        if (loginAdmin == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateMyPassword(request, loginAdmin.getId()));
     }
 
 }

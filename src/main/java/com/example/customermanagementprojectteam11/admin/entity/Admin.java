@@ -96,4 +96,9 @@ public class Admin extends BaseEntity {
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+
+    // 비밀번호 변경
+    public void updateMyPassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

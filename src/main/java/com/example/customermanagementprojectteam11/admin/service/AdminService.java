@@ -344,4 +344,29 @@ public class AdminService {
                 admin.getModifiedAt()
         );
     }
+
+    // 비밀번호 변경 기능
+    @Transactional
+    public UpdateMyPasswordResponse updateMyPassword(UpdateMyPasswordRequest request, Long adminId) {
+        // adminId로 관리자 조회
+        Admin admin = adminRepository.findById(adminId)
+                // 없으면 예외 발생
+                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        // 현재 비밀번호 검증
+        // 저장되어있는 비밀번호가 요청바디의 비밀번호와 다르다면 예외 발생
+        if (!passwordEncoder.matches(request.getCurrentPassword(),admin.getPassword())) {
+            throw new RuntimeException("현재 비밀번호가 올바르지 않습니다.");
+        }
+        // 새 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+
+        // 엔티티에 변경됨 비밀번호 저장
+        admin.updateMyPassword(encodedPassword);
+
+        // 응답 dto 반환
+        return new UpdateMyPasswordResponse(
+                admin.getId(),
+                "비밀번호가 변경되었습니다."
+        );
+    }
 }
