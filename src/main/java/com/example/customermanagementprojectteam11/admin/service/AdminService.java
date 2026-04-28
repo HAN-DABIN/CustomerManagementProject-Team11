@@ -321,4 +321,26 @@ public class AdminService {
                 admin.getPhoneNumber()
         );
     }
+
+    // 내 프로필 수정 기능
+    @Transactional
+    public UpdateMyProfileResponse updateMyProfile(UpdateMyProfileRequest request, Long adminId) {
+        // adminId로 관리자 조회
+        Admin admin = adminRepository.findById(adminId)
+                // 없으면 예외 발생
+                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+        // entity 값 변경
+        admin.updateMyProfile(
+                request.getName(),
+                request.getEmail(),
+                request.getPhoneNumber()
+        );
+        // 응답 dto 반환
+        return new UpdateMyProfileResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getEmail(),
+                admin.getPhoneNumber()
+        );
+    }
 }

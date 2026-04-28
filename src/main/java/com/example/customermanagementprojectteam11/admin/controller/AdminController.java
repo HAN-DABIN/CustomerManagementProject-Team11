@@ -95,7 +95,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.rejectAdminStatus(request, adminId));
     }
 
-    // 내 프로필 조회
+    // 내 프로필 조회 API
     @GetMapping("/me")
     public ResponseEntity<GetMyProfileResponse> getMyProfile(
             HttpSession session) { // 로그인 세션 정보 받기
@@ -107,6 +107,22 @@ public class AdminController {
         }
         // 로그인 한 관리자 id를 서비스로 전달해서 프로필 조회
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getMyProfile(loginAdmin.getId()));
+    }
+
+    // 내 프로필 수정 API
+    @PatchMapping("/me")
+    public ResponseEntity<UpdateMyProfileResponse> updateMyProfile(
+            HttpSession session, // 로그인 세션 정보 받기
+            @RequestBody UpdateMyProfileRequest request) { // 수정 바디 받기
+        // 세션에 저장된 로그인 관리자 정보 꺼내고
+        SessionAdmin loginAdmin = (SessionAdmin) session.getAttribute("loginAdmin");
+        // 만약 로그인이 안 된 상태면 401 반환하기
+        if (loginAdmin == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateMyProfile(request, loginAdmin.getId()));
+
+
     }
 
 }
