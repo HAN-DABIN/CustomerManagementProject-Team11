@@ -1,6 +1,6 @@
 package com.example.customermanagementprojectteam11.product.entity;
 
-import com.example.customermanagementprojectteam11.BaseEntity;
+import com.example.customermanagementprojectteam11.common.BaseEntity;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.product.category.ProductCategory;
 import com.example.customermanagementprojectteam11.product.status.ProductStatus;

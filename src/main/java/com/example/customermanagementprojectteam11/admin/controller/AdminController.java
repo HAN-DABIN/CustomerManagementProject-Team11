@@ -4,6 +4,7 @@ import com.example.customermanagementprojectteam11.admin.dto.*;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.admin.service.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     // 속성
     public final AdminService adminService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<CreateAdminResponse> createAdmin(
+            @Valid @RequestBody CreateAdminRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.save(request));
+    }
 
     // 관리자 리스트 조회 API
     @GetMapping
