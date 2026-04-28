@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public enum AdminStatus {
     PENDING("승인 대기"),
+    APPROVED("승인 완료"),
     ACTIVE("활성"),
     INACTIVE("비활성"),
     SUSPENDED("정지"),

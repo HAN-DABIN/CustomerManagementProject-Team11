@@ -4,11 +4,16 @@ import com.example.customermanagementprojectteam11.admin.config.DuplicateEmailEx
 import com.example.customermanagementprojectteam11.admin.config.PasswordEncoder;
 import com.example.customermanagementprojectteam11.admin.dto.CreateAdminRequest;
 import com.example.customermanagementprojectteam11.admin.dto.CreateAdminResponse;
+import com.example.customermanagementprojectteam11.admin.dto.UpdateAdminResponse;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
+import jakarta.persistence.metamodel.SingularAttribute;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +54,25 @@ public class AdminService {
                 .role(savedAdmin.getRole())
                 .status(savedAdmin.getStatus())
                 .createdAt(savedAdmin.getCreatedAt())
+                .build();
+
+    }
+    @Transactional
+    public UpdateAdminResponse approveAdmin(Long id) {
+
+        // 1. Id로 관리자 찾기
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 관리자가 존재하지 않습니다."));
+
+        // 2. 상태를 승인완료로 변경
+        admin.approve();
+
+        // 3. Response dto로 변환해서 반환
+        return UpdateAdminResponse.builder()
+                .id(admin.getId())
+                .name(admin.getName())
+                .role(admin.getRole())
+                .status(admin.getStatus())
                 .build();
 
     }
