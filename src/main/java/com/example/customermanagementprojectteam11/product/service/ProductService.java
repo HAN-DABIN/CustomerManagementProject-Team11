@@ -28,10 +28,10 @@ public class ProductService {
 
     @Transactional
     public AddProductResponse add(AddProductRequest request){
-        Product product = new Product(request.getProductName(), request.getCategory(), request.getPrice(), request.getStock(), request.getStatus());
         Admin admin = adminRepository.findById(request.getAdminId()).orElseThrow(
                 () -> new AdminNotFoundException("관리자가 존재하지 않습니다.")
         );
+        Product product = new Product(request.getProductName(), request.getCategory(), request.getPrice(), request.getStock(), request.getStatus(), admin);
         Product savedProduct = productRepository.save(product);
         return new AddProductResponse(
                 savedProduct.getProductName(),
@@ -90,9 +90,9 @@ public class ProductService {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
         );
-        if(product.getAdmin().getStatus() != AdminStatus.ACTIVE){
-            throw new AdminNotFoundException("등록된 관리자가 없습니다.");
-        }
+        Admin admin = adminRepository.findById(product.getAdmin().getId()).orElseThrow(
+                () -> new AdminNotFoundException("등록된 관리자가 없습니다.")
+        );
 
         return new GetOneProductResponse(
                 product.getProductName(),
@@ -102,8 +102,8 @@ public class ProductService {
                 product.getStatus(),
                 product.getCreateAt(),
                 product.getUpdateAt(),
-                product.getUserName(),
-                product.getAdmin().getEmail()
+                admin.getName(),
+                admin.getEmail()
         );
     }
 

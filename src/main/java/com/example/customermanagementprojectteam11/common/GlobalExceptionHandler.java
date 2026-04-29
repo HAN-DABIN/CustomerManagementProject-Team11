@@ -4,6 +4,7 @@ import com.example.customermanagementprojectteam11.admin.config.DuplicateEmailEx
 import com.example.customermanagementprojectteam11.product.handler.AdminException;
 import com.example.customermanagementprojectteam11.product.handler.AdminNotFoundException;
 import com.example.customermanagementprojectteam11.product.handler.ProductException;
+import com.example.customermanagementprojectteam11.product.handler.ProductStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -67,6 +68,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AdminException.class)
     public ResponseEntity<String> handleAdminNotFoundExceptioin(AdminNotFoundException ex){
+        return ResponseEntity.status(ex.getStatus()).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ProductStatusException.class)
+    public ResponseEntity<String> handleProductStautsException(ProductStatusException ex){
         return ResponseEntity.status(ex.getStatus()).body(ex.getMessage());
     }
 }

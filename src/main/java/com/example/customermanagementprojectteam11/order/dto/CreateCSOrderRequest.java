@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public class CreateCSOrderRequest {
     private Long customerid;
+
     private Long productId;
 
     @NotNull(message = "수량을 입력하세요")

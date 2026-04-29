@@ -6,9 +6,10 @@ import com.example.customermanagementprojectteam11.order.dto.CreateCSOrderReques
 import com.example.customermanagementprojectteam11.order.dto.CreateCSOrderResponse;
 import com.example.customermanagementprojectteam11.order.entity.Order;
 import com.example.customermanagementprojectteam11.order.entity.OrderStatus;
-import com.example.customermanagementprojectteam11.order.repository.CSOrderRepository;
+import com.example.customermanagementprojectteam11.order.repository.OrderRepositoryC;
 import com.example.customermanagementprojectteam11.product.entity.Product;
 import com.example.customermanagementprojectteam11.product.handler.ProductNotFoundException;
+import com.example.customermanagementprojectteam11.product.handler.ProductStatusErrorException;
 import com.example.customermanagementprojectteam11.product.repository.ProductRepository;
 import com.example.customermanagementprojectteam11.product.status.ProductStatus;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,8 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
-public class CSOrderService {
-    private final CSOrderRepository csOrderRepository;
+public class OrderServiceC {
+    private final OrderRepositoryC orderRepositoryC;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
@@ -34,6 +35,7 @@ public class CSOrderService {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmm"));
         int randomNum = (int)(Math.random() * 900) + 100; // 100~999 사이의 랜덤 숫자
         Long generatedOrderNumber = Long.parseLong(timestamp + randomNum);
+
         Customer customer = customerRepository.findById(request.getCustomerid()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다.")
         );
@@ -44,7 +46,7 @@ public class CSOrderService {
             throw new IllegalArgumentException("주문 수량은 최소 1개 이상이어야 합니다.");
         }
         if (product.getStatus() == ProductStatus.DISCONTINUED || product.getStatus() == ProductStatus.SOLD_OUT) {
-            throw new IllegalStateException("주문할 수 없는 상품 상태입니다.");
+            throw new ProductStatusErrorException("주문할 수 없는 상품 상태입니다.");
         }
         Order order = new Order(
                 customer.getName(),
@@ -56,16 +58,17 @@ public class CSOrderService {
                 request.getStock(),
                 generatedOrderNumber,
                 OrderStatus.PENDING,
-                product.getStatus());
+                product.getStatus(),
+                product.getPrice() * request.getStock());
         product.removeStock(request.getStock());
-        Order savedOrder = csOrderRepository.save(order);
+        Order savedOrder = orderRepositoryC.save(order);
         return new CreateCSOrderResponse(
                 savedOrder.getName(),
                 savedOrder.getEmail(),
                 savedOrder.getPhoneNumber(),
                 savedOrder.getProductName(),
                 savedOrder.getCategory(),
-                product.getPrice() * request.getStock(),
+                savedOrder.getTotalPrice(),
                 savedOrder.getCreatedAt(),
                 savedOrder.getOrderNumber(),
                 savedOrder.getOrderStatus(),

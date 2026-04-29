@@ -52,12 +52,13 @@ public class Product extends BaseEntity {
     private String userName;
     private String userEmail;
 
-    public Product(String productName, ProductCategory category, long price, long stock, ProductStatus status){
+    public Product(String productName, ProductCategory category, long price, long stock, ProductStatus status, Admin admin){
         this.productName = productName;
         this.category = category;
         this.price = price;
         this.stock = stock;
         this.status = status;
+        this.admin = admin;
     }
 
     public void update(String productname, ProductCategory category, long price){
