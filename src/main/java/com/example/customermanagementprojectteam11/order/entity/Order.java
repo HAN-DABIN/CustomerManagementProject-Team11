@@ -3,13 +3,26 @@ package com.example.customermanagementprojectteam11.order.entity;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.common.BaseEntity;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
+import com.example.customermanagementprojectteam11.order.dto.CreateCSOrderRequest;
+import com.example.customermanagementprojectteam11.product.category.ProductCategory;
+import com.example.customermanagementprojectteam11.product.entity.Product;
+import com.example.customermanagementprojectteam11.product.status.ProductStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "oreders")
+@Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Order extends BaseEntity {
@@ -37,6 +50,37 @@ public class Order extends BaseEntity {
     @Column(name = "total_price",nullable = false)
     private Long totalPrice;
 
+    // 주문 생성 시 사용하는 속성
+    private String name;
 
+    private String email;
+
+    private String phoneNumber;
+
+    private String productName;
+
+    private ProductCategory category;
+
+    private Long price;
+
+    private Long stock;
+
+    private ProductStatus productStatus;
+
+
+
+
+    public Order(String name, String email, String phoneNumber, String productName, ProductCategory category, Long price, Long stock, Long orderNumber, OrderStatus orderStatus, ProductStatus productStatus){
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.productName = productName;
+        this.category = category;
+        this.price = price;
+        this.stock = stock;
+        this.orderNumber = orderNumber;
+        this.orderStatus = orderStatus;
+        this.productStatus = productStatus;
+    }
 
 }

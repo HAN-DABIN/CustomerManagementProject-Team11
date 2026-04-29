@@ -1,14 +1,20 @@
 package com.example.customermanagementprojectteam11.product.service;
 
+import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
+import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
+import com.example.customermanagementprojectteam11.product.category.ProductCategory;
 import com.example.customermanagementprojectteam11.product.dto.*;
 import com.example.customermanagementprojectteam11.product.entity.Product;
 import com.example.customermanagementprojectteam11.product.handler.AdminNotFoundException;
 import com.example.customermanagementprojectteam11.product.handler.ProductNotFoundException;
 import com.example.customermanagementprojectteam11.product.repository.ProductRepository;
+import com.example.customermanagementprojectteam11.product.status.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final AdminRepository adminRepository;
 
     @Transactional
     public AddProductResponse add(AddProductRequest request){
         Product product = new Product(request.getProductName(), request.getCategory(), request.getPrice(), request.getStock(), request.getStatus());
+        Admin admin = adminRepository.findById(request.getAdminId()).orElseThrow(
+                () -> new AdminNotFoundException("관리자가 존재하지 않습니다.")
+        );
         Product savedProduct = productRepository.save(product);
         return new AddProductResponse(
                 savedProduct.getProductName(),
@@ -30,20 +40,27 @@ public class ProductService {
                 savedProduct.getStock(),
                 savedProduct.getStatus(),
                 savedProduct.getCreateAt(),
-                savedProduct.getUpdateAt()
+                savedProduct.getUpdateAt(),
+                admin.getId()
         );
     }
 
 
     @Transactional(readOnly = true)
-    public ProductInfoResponse getAll(GetAllProductRequest request, Pageable pageable) {
-        Page<Product> productPage = productRepository.findAll(request.getProductName(),
-                request.getCategory(),
-                request.getStatus(),
-                pageable);
-        if(productPage == null){
+    public ProductInfoResponse getAll(String keyword, ProductCategory category, ProductStatus status,
+                                      int page, int size, String sortBy, String direction) {
+
+
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortDirection, sortBy));
+
+        Page<Product> productPage = productRepository.findAll(keyword, category, status, pageable);
+
+        if(productPage.isEmpty()){
             throw new ProductNotFoundException("상품을 찾을 수 없습니다.");
         }
+
+
         List<GetAllProductResponse> response = productPage.getContent().stream()
                 .map(product -> new GetAllProductResponse(
                         product.getProductId(),
@@ -52,12 +69,14 @@ public class ProductService {
                         product.getPrice(),
                         product.getStock(),
                         product.getStatus(),
-                        product.getUserName(),
+                        product.getAdmin().getName(), // 작성자 이름
                         product.getCreateAt(),
                         product.getUpdateAt()
                 )).toList();
+
+
         ProductPageableResponse pageInfo = new ProductPageableResponse(
-                productPage.getNumber(),
+                productPage.getNumber() + 1,
                 productPage.getSize(),
                 productPage.getTotalElements(),
                 productPage.getTotalPages()
@@ -83,7 +102,7 @@ public class ProductService {
                 product.getStatus(),
                 product.getCreateAt(),
                 product.getUpdateAt(),
-                product.getAdmin().getName(),
+                product.getUserName(),
                 product.getAdmin().getEmail()
         );
     }
