@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "order_itmes")
+@Table(name = "order_items")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class OrderItem {
@@ -18,7 +18,7 @@ public class OrderItem {
     private Long id;
     // customer엔티티와 연관관계 1:N
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "custormer_id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
     // product엔티티와 연관관계 1:N
     @ManyToOne(fetch = FetchType.LAZY)
