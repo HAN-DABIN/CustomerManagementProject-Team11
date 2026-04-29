@@ -32,7 +32,8 @@ public class Order extends BaseEntity {
     private Admin admin;
     @Column(name = "order_number", nullable = false)
     private Long orderNumber;
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private OrderStatus orderStatus;
     @Column(name = "unit_price", nullable = false)
     private Long unitPrice;
@@ -69,6 +70,12 @@ public class Order extends BaseEntity {
         this.orderStatus = orderStatus;
         this.productStatus = productStatus;
     }
+
+    //엔티티 상태 변경 메서드
+    public void changeStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
 
 
 }
