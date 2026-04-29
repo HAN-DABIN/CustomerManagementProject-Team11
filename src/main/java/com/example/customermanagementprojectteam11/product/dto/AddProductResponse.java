@@ -15,8 +15,9 @@ public class AddProductResponse {
     private final ProductStatus status;
     private final LocalDateTime createAt;
     private final LocalDateTime updateAt;
+    private final Long adminId;
 
-    public AddProductResponse(String productName, ProductCategory category, long price, long stock, ProductStatus status, LocalDateTime createAt, LocalDateTime updateAt) {
+    public AddProductResponse(String productName, ProductCategory category, long price, long stock, ProductStatus status, LocalDateTime createAt, LocalDateTime updateAt, Long adminId) {
         this.productName = productName;
         this.category = category;
         this.price = price;
@@ -24,5 +25,6 @@ public class AddProductResponse {
         this.status = status;
         this.createAt = createAt;
         this.updateAt = updateAt;
+        this.adminId = adminId;
     }
 }

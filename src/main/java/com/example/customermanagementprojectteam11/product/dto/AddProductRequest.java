@@ -25,4 +25,7 @@ public class AddProductRequest {
 
     @NotNull(message = "상품 상태를 입력하세요")
     private ProductStatus status;
+
+    @NotNull(message = "관리자 ID를 입력하세요")
+    private Long adminId;
 }
