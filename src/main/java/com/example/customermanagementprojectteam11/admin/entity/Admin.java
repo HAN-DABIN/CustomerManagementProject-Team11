@@ -89,4 +89,16 @@ public class Admin extends BaseEntity {
         this.rejectReason = rejectReason;
         rejectStatus(LocalDateTime.now());
     }
+
+    // 내 프로필 수정
+    public void updateMyProfile(String name, String email, String phoneNumber){
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    // 비밀번호 변경
+    public void updateMyPassword(String newPassword) {
+        this.password = newPassword;
+    }
 }
