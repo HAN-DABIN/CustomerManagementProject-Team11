@@ -1,10 +1,7 @@
 package com.example.customermanagementprojectteam11.order.dto;
 
-import com.example.customermanagementprojectteam11.product.category.ProductCategory;
-import com.example.customermanagementprojectteam11.product.status.ProductStatus;
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 

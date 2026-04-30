@@ -1,6 +1,5 @@
 package com.example.customermanagementprojectteam11.login.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
