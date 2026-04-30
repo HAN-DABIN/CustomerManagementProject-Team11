@@ -23,7 +23,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
     // customer엔티티와 연관관계 1:N
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
     // admin엔티티와 연관관계 1:N
