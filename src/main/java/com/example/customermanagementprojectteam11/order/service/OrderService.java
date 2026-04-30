@@ -2,6 +2,7 @@ package com.example.customermanagementprojectteam11.order.service;
 
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
+import com.example.customermanagementprojectteam11.common.exception.BadRequestException;
 import com.example.customermanagementprojectteam11.common.exception.NotFoundException;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.repository.CustomerRepository;
@@ -21,10 +22,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,7 +45,7 @@ public class OrderService {
         Long generatedOrderNumber = Long.parseLong(timestamp + randomNum);
 
         Customer customer = customerRepository.findById(request.getCustomerid()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException("해당 사용자를 찾을 수 없습니다.")
         );
         Product product = productRepository.findById(request.getProductId()).orElseThrow(
                 () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
@@ -244,7 +243,7 @@ public class OrderService {
     public Order findByIdOrThrow(Long id) {
         return orderRepository.findById(id).orElseThrow(
                 //없는 고객 조회시 404 에러 뜨게 변경
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 주문을 찾을 수 없습니다."));
+                () -> new NotFoundException("해당 주문을 찾을 수 없습니다."));
     }
 
     //주문 상태 수정
@@ -271,7 +270,7 @@ public class OrderService {
         }
         //상황3. 두 경우가 모두 아닐 시 던짐
         else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "변경할 수 없는 주문 상태입니다.");
+            throw new BadRequestException("변경할 수 없는 주문 상태입니다.");
         }
 
         // 5. 응답 반환
@@ -291,7 +290,7 @@ public class OrderService {
 
         //3. 취소 사유가 비어있을 경우 예외 처리 진행하기
         if (cancelReason == null || cancelReason.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "취소 사유는 필수 입력입니다.");
+            throw new BadRequestException("취소 사유는 필수 입력입니다.");
         }
 
         //4. 현재 주문 상태 확인하기
@@ -300,7 +299,7 @@ public class OrderService {
         //5. 현재 상태가 준비중이 아닐 경우 예외를 던져야한다.
         //다른 상황일 경우 취소 불가능 처리
         if (status != OrderStatus.PENDING) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "준비중 상태에서만 취소 가능합니다.");
+            throw new BadRequestException("준비중 상태에서만 취소 가능합니다.");
         }
 
         //6. 주문에 연결된 주문 상품을 꺼내준다. OrderItem
@@ -309,7 +308,7 @@ public class OrderService {
 
         //6-1 주문 상품 정보가 없을 때 예외처리 진행
         if (orderItem == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "주문 상품 정보가 없습니다.");
+            throw new BadRequestException("주문 상품 정보가 없습니다.");
         }
 
         //7. 주문 상품에서 상품과 수량을 꺼내준다.
