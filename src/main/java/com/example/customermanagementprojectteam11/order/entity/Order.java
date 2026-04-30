@@ -33,7 +33,7 @@ public class Order extends BaseEntity {
     @Column(name = "order_number", nullable = false)
     private Long orderNumber;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
     @Column(name = "unit_price", nullable = false)
     private Long unitPrice;
@@ -55,24 +55,23 @@ public class Order extends BaseEntity {
 
     private ProductCategory category;
 
-    private Long price;
-
     private Long stock;
 
     private ProductStatus productStatus;
 
 
-    public Order(String name, String email, String phoneNumber, String productName, ProductCategory category, Long price, Long stock, Long orderNumber, OrderStatus orderStatus, ProductStatus productStatus){
+    public Order(String name, String email, String phoneNumber, String productName, ProductCategory category, Long unitPrice, Long stock, Long orderNumber, OrderStatus orderStatus, ProductStatus productStatus, Long totalPrice){
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.productName = productName;
         this.category = category;
-        this.price = price;
+        this.unitPrice = unitPrice;
         this.stock = stock;
         this.orderNumber = orderNumber;
         this.orderStatus = orderStatus;
         this.productStatus = productStatus;
+        this.totalPrice = totalPrice;
     }
 
     //엔티티 상태 변경 메서드

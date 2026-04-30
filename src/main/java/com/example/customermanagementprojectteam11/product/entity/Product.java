@@ -52,12 +52,13 @@ public class Product extends BaseEntity {
     private String userName;
     private String userEmail;
 
-    public Product(String productName, ProductCategory category, long price, long stock, ProductStatus status){
+    public Product(String productName, ProductCategory category, long price, long stock, ProductStatus status, Admin admin){
         this.productName = productName;
         this.category = category;
         this.price = price;
         this.stock = stock;
         this.status = status;
+        this.admin = admin;
     }
 
     public void update(String productname, ProductCategory category, long price){
@@ -70,12 +71,29 @@ public class Product extends BaseEntity {
         this.status = status;
     }
 
-    public boolean changeStatus(Long stock){
-        if(stock >= 1){
-            statusUpdate(ON_SALE);
-        }else {
-            statusUpdate(SOLD_OUT);
+
+    public void removeStock(long quantity) {
+        if (this.stock < quantity) {
+            throw new IllegalStateException("재고가 부족하여 주문할 수 없습니다.");
         }
-        return true;
+        this.stock -= quantity;
+        updateStatusByStock();
+    }
+
+    public void addStock(long quantity) {
+        this.stock += quantity;
+        updateStatusByStock();
+    }
+
+    private void updateStatusByStock() {
+        if (this.status == ProductStatus.DISCONTINUED) {
+            return;
+        }
+        if (this.stock <= 0) {
+            this.status = ProductStatus.SOLD_OUT;
+        }
+        else {
+            this.status = ProductStatus.ON_SALE;
+        }
     }
 }
