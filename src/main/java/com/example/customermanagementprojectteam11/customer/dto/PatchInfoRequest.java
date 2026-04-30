@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class PatchInfoRequest {
 
-    public String name;
-    public String email;
-    public String phoneNumber;
-    public String status;
+    private String name;
+    private String email;
+    private String phoneNumber;
+    private String status;
 }
