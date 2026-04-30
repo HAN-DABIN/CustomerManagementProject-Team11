@@ -6,8 +6,8 @@ import com.example.customermanagementprojectteam11.admin.repository.AdminReposit
 import com.example.customermanagementprojectteam11.product.category.ProductCategory;
 import com.example.customermanagementprojectteam11.product.dto.*;
 import com.example.customermanagementprojectteam11.product.entity.Product;
-import com.example.customermanagementprojectteam11.product.handler.AdminNotFoundException;
-import com.example.customermanagementprojectteam11.product.handler.ProductNotFoundException;
+import com.example.customermanagementprojectteam11.common.exception.AdminNotFoundException;
+import com.example.customermanagementprojectteam11.common.exception.ProductNotFoundException;
 import com.example.customermanagementprojectteam11.product.repository.ProductRepository;
 import com.example.customermanagementprojectteam11.product.status.ProductStatus;
 import lombok.RequiredArgsConstructor;
@@ -145,7 +145,7 @@ public class ProductService {
     @Transactional
     public void delete(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new ProductNotFoundException("존재하지 않는 일정입니다.")
+                () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
         );
         productRepository.delete(product);
     }
