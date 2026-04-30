@@ -2,7 +2,6 @@ package com.example.customermanagementprojectteam11.login.controller;
 
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
-import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
 import com.example.customermanagementprojectteam11.common.exception.ForbiddenException;
 import com.example.customermanagementprojectteam11.common.exception.UnauthorizedException;
@@ -10,7 +9,6 @@ import com.example.customermanagementprojectteam11.login.dto.LoginRequest;
 import com.example.customermanagementprojectteam11.login.dto.LoginResponse;
 import com.example.customermanagementprojectteam11.login.dto.SessionAdmin;
 import com.example.customermanagementprojectteam11.login.service.AdminLoginService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

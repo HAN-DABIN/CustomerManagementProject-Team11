@@ -4,7 +4,6 @@ import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.common.exception.BadRequestException;
 import com.example.customermanagementprojectteam11.common.exception.NotFoundException;
-import com.example.customermanagementprojectteam11.common.exception.BadRequestException;
 import com.example.customermanagementprojectteam11.common.exception.ProductNotAvailableException;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.repository.CustomerRepository;
