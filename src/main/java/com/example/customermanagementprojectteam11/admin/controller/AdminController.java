@@ -75,6 +75,8 @@ public class AdminController {
             @PathVariable Long adminId, // 수정할 관리자 Id
             @Valid @RequestBody UpdateAdminRequest request){ // 수정할 내용을 json으로 전달받아 DTO 변환
 
+        validateCustomerAuthority(session); // 인가
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
@@ -85,8 +87,12 @@ public class AdminController {
     // 관리자 역할 변경 API
     @PatchMapping("/{adminId}/role") // ID값으로 관리자 역할 수정
     public ResponseEntity<ApiResponse<UpdateAdminRoleResponse>> updateAdminRole(
+            HttpSession session, // 세션
             @PathVariable Long adminId,
             @Valid @RequestBody UpdateAdminRoleRequest request) { // 역할 변경된 내용을 json으로 받아 dto 변환
+
+        validateCustomerAuthority(session); // 인가
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
@@ -97,8 +103,12 @@ public class AdminController {
     // 관리자 상태 변경 API
     @PatchMapping("/{adminId}/status") // ID값으로 관리자 상태 수정
     public ResponseEntity<ApiResponse<UpdateAdminStatusResponse>> updateAdminStatus(
+            HttpSession session, // 세션 추가
             @PathVariable Long adminId,
             @Valid @RequestBody UpdateAdminStatusRequest request) {
+
+        validateCustomerAuthority(session); // 인가
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
@@ -109,7 +119,11 @@ public class AdminController {
     // 관리자 삭제 API
     @DeleteMapping("{adminId}") // ID값으로 관리자 삭제
     public ResponseEntity<Void> deleteAdmin(
+            HttpSession session, // 세션 추가
             @PathVariable Long adminId) {
+
+        validateCustomerAuthority(session); // 인가
+
         adminService.deleteAdmin(adminId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -117,7 +131,11 @@ public class AdminController {
     // 관리자 가입 승인 API (승인대기 -> 활성)
     @PatchMapping("/{adminId}/approve") // ID값으로 관리자 상태 변경 (승인대기 -> 활성)
     public ResponseEntity<ApiResponse<ApproveAdminResponse>> approveAdmin(
+            HttpSession session, // 세션 추가
             @PathVariable Long adminId) {
+
+        validateCustomerAuthority(session); // 인가
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
@@ -129,8 +147,12 @@ public class AdminController {
     // 관리자 가입 거절 API (승인대기 -> 거절)
     @PatchMapping("/{adminId}/reject")
     public ResponseEntity<ApiResponse<RejectAdminResponse>> rejectAdmin(
+            HttpSession session, // 세션
             @PathVariable Long adminId,
             @Valid @RequestBody RejectAdminReasonRequest request) {
+
+        validateCustomerAuthority(session); // 인가
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
