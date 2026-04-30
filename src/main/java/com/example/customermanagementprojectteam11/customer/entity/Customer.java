@@ -4,12 +4,17 @@ import com.example.customermanagementprojectteam11.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.type.NumericBooleanConverter;
 
 @Entity
 @NoArgsConstructor
 @Getter
-@Table (name = "customers")
+@Table(name = "customers")
+//논리 삭제 적용
+@SoftDelete(columnName = "is_deleted", converter = NumericBooleanConverter.class)
 public class Customer extends BaseEntity {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
