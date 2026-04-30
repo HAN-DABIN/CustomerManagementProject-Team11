@@ -6,6 +6,9 @@ import com.example.customermanagementprojectteam11.admin.dto.*;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
+import com.example.customermanagementprojectteam11.common.exception.BadRequestException;
+import com.example.customermanagementprojectteam11.common.exception.ConflictException;
+import com.example.customermanagementprojectteam11.common.exception.NotFoundException;
 import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,7 +35,7 @@ public class AdminService {
 
         // 1. 이메일 중복 체크 [중복시 에러반환]
         if (adminRepository.existsByEmail(request.getEmail())){
-            throw new DuplicateEmailException("이미 사용 중인 이메일입니다.");
+            throw new ConflictException("이미 사용 중인 이메일입니다.");
         }
 
         // 2. 비밀번호 암호화 [BCrypt 사용]
@@ -164,7 +167,7 @@ public class AdminService {
         // adminId로 관리자 조회
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // 조회 성공 시 dto 반환
         return new GetAdminDetailResponse(
                 admin.getId(),
@@ -184,7 +187,7 @@ public class AdminService {
         // adminId로 관리자 조회
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // entity 값 변경
         admin.updateAdmin(
                 request.getName(),
@@ -207,7 +210,7 @@ public class AdminService {
         // adminId로 관리자 조회
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // 엔티티 값 요청받은 값으로 변경
         admin.changeRole(
                 request.getRole()
@@ -227,7 +230,7 @@ public class AdminService {
         // adminId로 관리자 조회
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // 엔티티에 상태 변경 요청
         admin.changeStatus(
                 request.getStatus()
@@ -247,7 +250,7 @@ public class AdminService {
         // adminId로 관리자 조회
         Admin admin = adminRepository.findById(id)
                 // 없으면 예외처리
-                .orElseThrow(() -> new IllegalStateException("유저를 찾을 수 없습니다"));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // 관리자 삭제 -> is_delete에 업데이트 댐
         adminRepository.delete(admin);
     }
@@ -257,11 +260,11 @@ public class AdminService {
     public ApproveAdminResponse approveAdminStatus(Long adminId) {
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // 관리자의 상태가 승인대기 상태가 아니라면
         if (admin.getStatus() != AdminStatus.PENDING) {
             // 예외 발생
-            throw new IllegalStateException("승인대기 상태에서만 승인이 가능합니다.");
+            throw new ConflictException("승인대기 상태에서만 승인이 가능합니다.");
         }
         // 엔티티에서 승인상태 요청하기
         admin.approve();
@@ -282,11 +285,11 @@ public class AdminService {
     public RejectAdminResponse rejectAdminStatus(RejectAdminReasonRequest request, Long adminId) {
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // 관리자의 상태가 승인대기 상태가 아니라면
         if (admin.getStatus() != AdminStatus.PENDING) {
             // 예외 발생
-            throw new IllegalStateException("승인대기 상태에서만 승인거부가 가능합니다.");
+            throw new ConflictException("승인대기 상태에서만 승인거부가 가능합니다.");
         }
         // 엔티티에서 승인거부 및 거절 사유 업데이트 요청하기
         admin.reject(
@@ -312,7 +315,7 @@ public class AdminService {
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
                 .orElseThrow(() ->
-                        new IllegalStateException("관리자 정보를 찾을 수 없습니다."));
+                        new NotFoundException("해당 관리자가 없습니다."));
         return new GetMyProfileResponse(
                 admin.getId(),
                 admin.getName(),
@@ -327,7 +330,7 @@ public class AdminService {
         // adminId로 관리자 조회
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // entity 값 변경
         admin.updateMyProfile(
                 request.getName(),
@@ -350,11 +353,11 @@ public class AdminService {
         // adminId로 관리자 조회
         Admin admin = adminRepository.findById(adminId)
                 // 없으면 예외 발생
-                .orElseThrow(() -> new IllegalStateException("해당 관리자가 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 관리자가 없습니다."));
         // 현재 비밀번호 검증
         // 저장되어있는 비밀번호가 요청바디의 비밀번호와 다르다면 예외 발생
         if (!passwordEncoder.matches(request.getCurrentPassword(),admin.getPassword())) {
-            throw new RuntimeException("현재 비밀번호가 올바르지 않습니다.");
+            throw new BadRequestException("현재 비밀번호가 올바르지 않습니다.");
         }
         // 새 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(request.getNewPassword());
