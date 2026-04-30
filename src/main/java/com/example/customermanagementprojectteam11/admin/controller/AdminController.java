@@ -3,6 +3,7 @@ package com.example.customermanagementprojectteam11.admin.controller;
 import com.example.customermanagementprojectteam11.admin.dto.*;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
+import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
 import com.example.customermanagementprojectteam11.common.exception.UnauthorizedException;
 import com.example.customermanagementprojectteam11.admin.service.AdminService;
 import com.example.customermanagementprojectteam11.common.ApiResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     // 속성
     public final AdminService adminService;
+    private final AdminRepository adminRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<CreateAdminResponse>> createAdmin(
@@ -34,6 +36,7 @@ public class AdminController {
     // 관리자 리스트 조회 API
     @GetMapping
     public ResponseEntity<ApiResponse<GetAdminListResponse>> findListAdmin(
+            HttpSession session, // 세션 추가
             @RequestParam(required = false) String keyword, // 검색 키워드
             @RequestParam(defaultValue = "1") int page, // 페이지번호, 요청없으면 1페이지
             @RequestParam(defaultValue = "10") int size, // 페이지당 조회 개수, 요청없으면 기본 10개씩 조회
@@ -41,6 +44,8 @@ public class AdminController {
             @RequestParam(defaultValue = "asc") String order, // 정렬방향, 기본값: 오름차순
             @RequestParam(required = false) AdminRole role, // 역할 필터
             @RequestParam(required = false) AdminStatus status){ // 상태필터
+
+        validateCustomerAuthority(session); // 인가
         // 서비스에서 받은 결과 반환
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
@@ -52,7 +57,9 @@ public class AdminController {
     // 관리자 상세 조회 API
     @GetMapping("/{adminId}") // ID 값으로 관리자 상세 조회
     public ResponseEntity<ApiResponse<GetAdminDetailResponse>> findDetialAdmin(
+            HttpSession session, // 세션 추가
             @PathVariable Long adminId) { // 조회할 관리자 고유 id
+        validateCustomerAuthority(session); // 인가
         // service에서 관리자 id 조회 후 200 OK 상태코드와 응답 반환
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
@@ -64,6 +71,7 @@ public class AdminController {
     // 관리자 정보 수정(이름, 이메일, 전화번호) API
     @PatchMapping("/{adminId}") // ID값으로 관리자 정보 수정
     public ResponseEntity<ApiResponse<UpdateAdminResponse>> updateAdmin(
+            HttpSession session, // 세션 추가
             @PathVariable Long adminId, // 수정할 관리자 Id
             @Valid @RequestBody UpdateAdminRequest request){ // 수정할 내용을 json으로 전달받아 DTO 변환
 
