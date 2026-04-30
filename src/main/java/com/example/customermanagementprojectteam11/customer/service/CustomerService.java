@@ -1,13 +1,12 @@
 package com.example.customermanagementprojectteam11.customer.service;
 
+import com.example.customermanagementprojectteam11.common.exception.NotFoundException;
 import com.example.customermanagementprojectteam11.customer.dto.GetCustomerResponse;
 import com.example.customermanagementprojectteam11.customer.dto.ListCustomerResponse;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoRequest;
 import com.example.customermanagementprojectteam11.customer.dto.PatchInfoResponse;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.repository.CustomerRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +30,7 @@ public class CustomerService {
     public Customer findByIdOrThrow(Long id) {
         return customerRepository.findById(id).orElseThrow(
                 //없는 고객 조회시 404 에러 뜨게 변경
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException("해당 사용자를 찾을 수 없습니다.")
         );
     }
 
