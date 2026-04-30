@@ -18,9 +18,11 @@ public class AdminLoginService {
     @Transactional(readOnly = true)
     public Admin Login(LoginRequest request) {
         // 먼저 이메일 조회
+        System.out.println("debug1");
         Admin admin = adminRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("이메일이 맞지않습니다."));
-        //비밀번호 조회하고 (암호화 된 비밀번호랑 입력된 비밀번호 검증)
+        //암호화된 비밀번호 검증
+        // passwordEncoder.matches(입력된  비밀번호)
         if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 맞지않습니다.");
         }
@@ -28,10 +30,6 @@ public class AdminLoginService {
         if (!admin.canLogin()) {
             throw new IllegalStateException(admin.loginMessage());
         }
-
-        //session.setAttribute("loginAdmin", admin); // 세션 인증
         return admin;
-
     }
-
 }

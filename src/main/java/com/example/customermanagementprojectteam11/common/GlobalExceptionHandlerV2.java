@@ -83,6 +83,8 @@ public class GlobalExceptionHandlerV2 {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(HttpStatus.BAD_REQUEST, message));
+
+
     }
 
 }
