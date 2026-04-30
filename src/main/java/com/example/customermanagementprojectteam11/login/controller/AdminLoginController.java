@@ -1,6 +1,11 @@
 package com.example.customermanagementprojectteam11.login.controller;
 
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
+import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
+import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
+import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
+import com.example.customermanagementprojectteam11.common.exception.ForbiddenException;
+import com.example.customermanagementprojectteam11.common.exception.UnauthorizedException;
 import com.example.customermanagementprojectteam11.login.dto.LoginRequest;
 import com.example.customermanagementprojectteam11.login.dto.LoginResponse;
 import com.example.customermanagementprojectteam11.login.dto.SessionAdmin;
@@ -19,19 +24,44 @@ import org.springframework.web.bind.annotation.*;
 public class AdminLoginController {
 
     private final AdminLoginService adminLoginService;
+    private final AdminRepository adminRepository;
 
 
-
-    //관리자 로그인
+    // 관리자 로그인
     @PostMapping("/admins/login")
     public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest request, BindingResult bindingResult, HttpSession session) { // 사용자가 보낸 이메일이랑 비번 데이터, 세션 객체
-        Admin admin = adminLoginService.Login(request);  // 검증 통과시
-        SessionAdmin sessionAdmin = new SessionAdmin(admin.getId(), admin.getEmail());
-        session.setAttribute("loginAdmin", sessionAdmin);   // 세션에 로그인 정보보관
-        session.setMaxInactiveInterval(60*60*24); // 세션 유효시간 24시간 설정
-        LoginResponse response = new LoginResponse(admin.getId(), admin.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+            @Valid @RequestBody LoginRequest request,
+            BindingResult bindingResult,
+            HttpSession session) {
+
+        // 1. 유효성 검사 (이메일 형식 등)
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            return ResponseEntity.badRequest().body(new LoginResponse("INVALID_INPUT", errorMessage));
+        }
+
+        try {
+            // 2. 서비스 로직 실행 (성공 시 Admin 객체 반환, 실패 시 예외 발생)
+            Admin admin = adminLoginService.Login(request);
+
+            // 3. 세션 생성 및 데이터 저장
+            SessionAdmin sessionAdmin = new SessionAdmin(admin.getId(), admin.getEmail());
+            session.setAttribute("loginAdmin", sessionAdmin);
+            session.setMaxInactiveInterval(60 * 60 * 24); // 24시간 유지
+
+            // 4. 로그인 성공 메시지 구성
+            String statusName = admin.getStatus().name();
+            String description = admin.getStatus().getDescription();
+            String finalMessage = description + " 상태입니다. 로그인이 완료되었습니다.";
+
+            return ResponseEntity.ok(new LoginResponse(statusName, finalMessage));
+
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            // 5. 로그인 싱패나 계정 상태 문제(승인 대기 등) 처리
+            // 서비스에서 던진 에러 메시지를 전달 사용자한테
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("LOGIN_FAIL", e.getMessage()));
+        }
     }
 
     // 관리자 로그아웃
@@ -77,5 +107,18 @@ public class AdminLoginController {
         return ResponseEntity.ok("현재 로그인된 관리자: " + sessionAdmin.getEmail());
     }
 
+    private void validateCustomerAuthority(HttpSession session) {
+        SessionAdmin loginAdmin = (SessionAdmin) session.getAttribute("loginAdmin");
 
+        if (loginAdmin == null) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
+        }
+
+        Admin admin = adminRepository.findById(loginAdmin.getId())
+                .orElseThrow(() -> new UnauthorizedException("로그인 관리자 정보를 찾을 수 없습니다."));
+
+        if (admin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new ForbiddenException("관리자 관리 권한이 없습니다.");
+        }
+    }
 }
