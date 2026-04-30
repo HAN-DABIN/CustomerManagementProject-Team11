@@ -2,6 +2,7 @@ package com.example.customermanagementprojectteam11.order.service;
 
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
+import com.example.customermanagementprojectteam11.common.exception.NotFoundException;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.repository.CustomerRepository;
 import com.example.customermanagementprojectteam11.order.dto.*;
@@ -196,7 +197,7 @@ public class OrderService {
     public GetOrderDetailResponse findDetailOrder(Long orderId) {
         // 엔티티에서 orderId 조회
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalStateException("주문내역이 없습니다."));
+                .orElseThrow(() -> new NotFoundException("주문내역이 없습니다."));
 
         // 주문에 연결된 등록 관리자 정보 조회
         // 고객 직접 주문 시 admin 값은 null일 수 있음
