@@ -23,31 +23,41 @@ public class AdminLoginController {
 
 
 
-    //관리자 로그인
+    // 관리자 로그인
     @PostMapping("/admins/login")
     public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest request, BindingResult bindingResult, HttpSession session) { // 사용자가 보낸 이메일이랑 비번 데이터, 세션 객체
+            @Valid @RequestBody LoginRequest request,
+            BindingResult bindingResult,
+            HttpSession session) {
 
+        // 1. 유효성 검사 (이메일 형식 등)
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
             return ResponseEntity.badRequest().body(new LoginResponse("INVALID_INPUT", errorMessage));
         }
-        Admin admin = adminLoginService.Login(request);  // 검증 통과시
-        //세션 데이터 준비, 저장
-        SessionAdmin sessionAdmin = new SessionAdmin(admin.getId(), admin.getEmail());
-        session.setAttribute("loginAdmin", sessionAdmin);
 
-        session.setMaxInactiveInterval(60*60*24); // 세션 유효시간 24시간 설정
+        try {
+            // 2. 서비스 로직 실행 (성공 시 Admin 객체 반환, 실패 시 예외 발생)
+            Admin admin = adminLoginService.Login(request);
 
-        AdminStatus adminStatus = admin.getStatus(); // Enum 객체 가져오기
-        String statusName = adminStatus.name();
-        String description = adminStatus.getDescription(); // "활성", "승인 대기", "정지" 등
+            // 3. 세션 생성 및 데이터 저장
+            SessionAdmin sessionAdmin = new SessionAdmin(admin.getId(), admin.getEmail());
+            session.setAttribute("loginAdmin", sessionAdmin);
+            session.setMaxInactiveInterval(60 * 60 * 24); // 24시간 유지
 
-        String suffix = statusName.equals("ACTIVE") ? " 상태입니다. 로그인이 완료되었습니다." : " 상태입니다. 관리자에게 문의하세요.";
-        String finalMessage = description + suffix;
+            // 4. 로그인 성공 메시지 구성
+            String statusName = admin.getStatus().name();
+            String description = admin.getStatus().getDescription();
+            String finalMessage = description + " 상태입니다. 로그인이 완료되었습니다.";
 
+            return ResponseEntity.ok(new LoginResponse(statusName, finalMessage));
 
-        return ResponseEntity.ok(new LoginResponse(statusName, finalMessage));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            // 5. 로그인 싱패나 계정 상태 문제(승인 대기 등) 처리
+            // 서비스에서 던진 에러 메시지를 전달 사용자한테
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("LOGIN_FAIL", e.getMessage()));
+        }
     }
 
     // 관리자 로그아웃
