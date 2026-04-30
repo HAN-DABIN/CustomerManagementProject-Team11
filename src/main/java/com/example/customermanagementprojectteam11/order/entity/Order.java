@@ -39,6 +39,10 @@ public class Order extends BaseEntity {
     private Long unitPrice;
     @Column(name = "total_price",nullable = false)
     private Long totalPrice;
+    //주문 취소 사유 필드 생성
+    @Column(name = "cancel_reason")
+    private String cancelReason;
+
 
     // 주문 생성 시 사용하는 속성
     private String name;
@@ -76,6 +80,11 @@ public class Order extends BaseEntity {
         this.orderStatus = orderStatus;
     }
 
+    //주문을 취소 상태로 바꾸면서, 취소 사유도 같이 저장하는 메서드
+    public void cancelOrder(String cancelReason) {
+        this.orderStatus = OrderStatus.CANCELED;
+        this.cancelReason = cancelReason;
+    }
 
 
 }
