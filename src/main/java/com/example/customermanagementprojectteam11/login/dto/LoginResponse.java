@@ -4,8 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class LoginResponse {
-    private Long id;
-    private String email;
+    private String status;
+    private String message;
+
+    public LoginResponse(String status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 }

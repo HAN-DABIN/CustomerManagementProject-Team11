@@ -1,6 +1,7 @@
 package com.example.customermanagementprojectteam11.login.controller;
 
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
+import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
 import com.example.customermanagementprojectteam11.login.dto.LoginRequest;
 import com.example.customermanagementprojectteam11.login.dto.LoginResponse;
 import com.example.customermanagementprojectteam11.login.dto.SessionAdmin;
@@ -26,12 +27,27 @@ public class AdminLoginController {
     @PostMapping("/admins/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request, BindingResult bindingResult, HttpSession session) { // 사용자가 보낸 이메일이랑 비번 데이터, 세션 객체
+
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            return ResponseEntity.badRequest().body(new LoginResponse("INVALID_INPUT", errorMessage));
+        }
         Admin admin = adminLoginService.Login(request);  // 검증 통과시
+        //세션 데이터 준비, 저장
         SessionAdmin sessionAdmin = new SessionAdmin(admin.getId(), admin.getEmail());
-        session.setAttribute("loginAdmin", sessionAdmin);   // 세션에 로그인 정보보관
+        session.setAttribute("loginAdmin", sessionAdmin);
+
         session.setMaxInactiveInterval(60*60*24); // 세션 유효시간 24시간 설정
-        LoginResponse response = new LoginResponse(admin.getId(), admin.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        AdminStatus adminStatus = admin.getStatus(); // Enum 객체 가져오기
+        String statusName = adminStatus.name();
+        String description = adminStatus.getDescription(); // "활성", "승인 대기", "정지" 등
+
+        String suffix = statusName.equals("ACTIVE") ? " 상태입니다. 로그인이 완료되었습니다." : " 상태입니다. 관리자에게 문의하세요.";
+        String finalMessage = description + suffix;
+
+
+        return ResponseEntity.ok(new LoginResponse(statusName, finalMessage));
     }
 
     // 관리자 로그아웃
