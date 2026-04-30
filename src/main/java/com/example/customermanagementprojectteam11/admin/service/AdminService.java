@@ -1,6 +1,5 @@
 package com.example.customermanagementprojectteam11.admin.service;
 
-import com.example.customermanagementprojectteam11.admin.AdminSpecification;
 import com.example.customermanagementprojectteam11.admin.config.DuplicateEmailException;
 import com.example.customermanagementprojectteam11.admin.config.PasswordEncoder;
 import com.example.customermanagementprojectteam11.admin.dto.*;

@@ -1,4 +1,4 @@
-package com.example.customermanagementprojectteam11.admin;
+package com.example.customermanagementprojectteam11.admin.service;
 
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
