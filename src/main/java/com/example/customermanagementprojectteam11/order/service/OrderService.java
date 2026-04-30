@@ -4,6 +4,8 @@ import com.example.customermanagementprojectteam11.admin.entity.Admin;
 import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.common.exception.BadRequestException;
 import com.example.customermanagementprojectteam11.common.exception.NotFoundException;
+import com.example.customermanagementprojectteam11.common.exception.BadRequestException;
+import com.example.customermanagementprojectteam11.common.exception.ProductNotAvailableException;
 import com.example.customermanagementprojectteam11.customer.entity.Customer;
 import com.example.customermanagementprojectteam11.customer.repository.CustomerRepository;
 import com.example.customermanagementprojectteam11.order.dto.*;
@@ -12,8 +14,6 @@ import com.example.customermanagementprojectteam11.order.entity.OrderItem;
 import com.example.customermanagementprojectteam11.order.entity.OrderStatus;
 import com.example.customermanagementprojectteam11.order.repository.OrderRepository;
 import com.example.customermanagementprojectteam11.product.entity.Product;
-import com.example.customermanagementprojectteam11.product.handler.ProductNotFoundException;
-import com.example.customermanagementprojectteam11.product.handler.ProductStatusErrorException;
 import com.example.customermanagementprojectteam11.product.repository.ProductRepository;
 import com.example.customermanagementprojectteam11.product.status.ProductStatus;
 import lombok.RequiredArgsConstructor;
@@ -48,13 +48,13 @@ public class OrderService {
                 () -> new NotFoundException("해당 사용자를 찾을 수 없습니다.")
         );
         Product product = productRepository.findById(request.getProductId()).orElseThrow(
-                () -> new ProductNotFoundException("존재하지 않는 상품입니다.")
+                () -> new NotFoundException("존재하지 않는 상품입니다.")
         );
         if (request.getStock() < 1) {
-            throw new IllegalArgumentException("주문 수량은 최소 1개 이상이어야 합니다.");
+            throw new BadRequestException("주문 수량은 최소 1개 이상이어야 합니다.");
         }
         if (product.getStatus() == ProductStatus.DISCONTINUED || product.getStatus() == ProductStatus.SOLD_OUT) {
-            throw new ProductStatusErrorException("주문할 수 없는 상품 상태입니다.");
+            throw new ProductNotAvailableException("주문할 수 없는 상품 상태입니다.");
         }
         Order order = new Order(
                 customer.getName(),

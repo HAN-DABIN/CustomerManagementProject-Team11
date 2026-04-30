@@ -25,10 +25,13 @@ public class OrderController {
     private final AdminRepository adminRepository;
 
     @PostMapping("/csorder")
-    public ResponseEntity<CreateCSOrderResponse> registOrder(
+    public ResponseEntity<ApiResponse<CreateCSOrderResponse>> registOrder(
             @Valid
             @RequestBody CreateCSOrderRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.regist(request));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(HttpStatus.CREATED,
+                        "주문 생성 성공",
+                        orderService.regist(request)));
     }
 
     // 주문 리스트 조회 API
