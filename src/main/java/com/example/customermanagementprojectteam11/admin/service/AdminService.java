@@ -1,6 +1,5 @@
 package com.example.customermanagementprojectteam11.admin.service;
 
-import com.example.customermanagementprojectteam11.admin.config.DuplicateEmailException;
 import com.example.customermanagementprojectteam11.admin.config.PasswordEncoder;
 import com.example.customermanagementprojectteam11.admin.dto.*;
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
@@ -30,6 +29,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
 
+    // 관리자 회원가입 기능
     @Transactional
     public CreateAdminResponse save(CreateAdminRequest request){
 

@@ -25,6 +25,8 @@ public class AdminController {
     public final AdminService adminService;
     private final AdminRepository adminRepository;
 
+
+    // 관리자 회원가입 API
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<CreateAdminResponse>> createAdmin(
             @Valid @RequestBody CreateAdminRequest request) {

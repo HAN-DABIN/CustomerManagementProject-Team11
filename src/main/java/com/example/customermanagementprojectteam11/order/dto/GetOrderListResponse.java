@@ -1,7 +1,5 @@
 package com.example.customermanagementprojectteam11.order.dto;
 
-
-import com.example.customermanagementprojectteam11.order.entity.OrderItem;
 import com.example.customermanagementprojectteam11.order.entity.OrderStatus;
 
 import lombok.AllArgsConstructor;
