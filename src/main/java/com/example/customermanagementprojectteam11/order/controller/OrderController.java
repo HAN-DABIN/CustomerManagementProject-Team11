@@ -26,8 +26,10 @@ public class OrderController {
 
     @PostMapping("/csorder")
     public ResponseEntity<ApiResponse<CreateCSOrderResponse>> registOrder(
+            HttpSession session, // 세션
             @Valid
             @RequestBody CreateCSOrderRequest request){
+        validateOrderAuthority(session); // 권한
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(HttpStatus.CREATED,
                         "주문 생성 성공",
@@ -37,12 +39,16 @@ public class OrderController {
     // 주문 리스트 조회 API
     @GetMapping
     public ResponseEntity<ApiResponse<GetOrderListResponse>> findListOrder(
+            HttpSession session, // 세션
             @RequestParam(required = false) String keyword, // 검색 키워드
             @RequestParam(defaultValue = "1") int page, // 페이지번호, 요청없으면 1페이지
             @RequestParam(defaultValue = "10") int size, // 페이지당 조회 개수, 요청없으면 기본 10개씩 조회
             @RequestParam(defaultValue = "createdAt") String sortBy, // 정렬기준, 기본값: 주문일
             @RequestParam(defaultValue = "desc") String direction, // 정렬방향, 기본값: 내림차순
             @RequestParam(required = false) OrderStatus status){ // 상태필터
+
+        validateOrderAuthority(session); // 권한
+
         // 서비스에서 받은 결과 반환
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
@@ -54,7 +60,9 @@ public class OrderController {
     // 주문 상세 조회 API
     @GetMapping("/{orderId}")
     public ResponseEntity<ApiResponse<GetOrderDetailResponse>> findDetailOrder(
+            HttpSession session, // 세션
             @PathVariable Long orderId) {
+        validateOrderAuthority(session); // 권한
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,

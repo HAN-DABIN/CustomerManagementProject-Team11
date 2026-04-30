@@ -1,7 +1,11 @@
 package com.example.customermanagementprojectteam11.login.controller;
 
 import com.example.customermanagementprojectteam11.admin.entity.Admin;
+import com.example.customermanagementprojectteam11.admin.entity.AdminRole;
 import com.example.customermanagementprojectteam11.admin.entity.AdminStatus;
+import com.example.customermanagementprojectteam11.admin.repository.AdminRepository;
+import com.example.customermanagementprojectteam11.common.exception.ForbiddenException;
+import com.example.customermanagementprojectteam11.common.exception.UnauthorizedException;
 import com.example.customermanagementprojectteam11.login.dto.LoginRequest;
 import com.example.customermanagementprojectteam11.login.dto.LoginResponse;
 import com.example.customermanagementprojectteam11.login.dto.SessionAdmin;
@@ -20,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminLoginController {
 
     private final AdminLoginService adminLoginService;
-
+    private final AdminRepository adminRepository;
 
 
     // 관리자 로그인
@@ -103,5 +107,18 @@ public class AdminLoginController {
         return ResponseEntity.ok("현재 로그인된 관리자: " + sessionAdmin.getEmail());
     }
 
+    private void validateCustomerAuthority(HttpSession session) {
+        SessionAdmin loginAdmin = (SessionAdmin) session.getAttribute("loginAdmin");
 
+        if (loginAdmin == null) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
+        }
+
+        Admin admin = adminRepository.findById(loginAdmin.getId())
+                .orElseThrow(() -> new UnauthorizedException("로그인 관리자 정보를 찾을 수 없습니다."));
+
+        if (admin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new ForbiddenException("관리자 관리 권한이 없습니다.");
+        }
+    }
 }
