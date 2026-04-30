@@ -64,9 +64,8 @@ public class AdminController {
     // 관리자 정보 수정(이름, 이메일, 전화번호) API
     @PatchMapping("/{adminId}") // ID값으로 관리자 정보 수정
     public ResponseEntity<ApiResponse<UpdateAdminResponse>> updateAdmin(
-            @Valid
             @PathVariable Long adminId, // 수정할 관리자 Id
-            @RequestBody UpdateAdminRequest request){ // 수정할 내용을 json으로 전달받아 DTO 변환
+            @Valid @RequestBody UpdateAdminRequest request){ // 수정할 내용을 json으로 전달받아 DTO 변환
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
@@ -78,9 +77,8 @@ public class AdminController {
     // 관리자 역할 변경 API
     @PatchMapping("/{adminId}/role") // ID값으로 관리자 역할 수정
     public ResponseEntity<ApiResponse<UpdateAdminRoleResponse>> updateAdminRole(
-            @Valid
             @PathVariable Long adminId,
-            @RequestBody UpdateAdminRoleRequest request) { // 역할 변경된 내용을 json으로 받아 dto 변환
+            @Valid @RequestBody UpdateAdminRoleRequest request) { // 역할 변경된 내용을 json으로 받아 dto 변환
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
@@ -91,9 +89,8 @@ public class AdminController {
     // 관리자 상태 변경 API
     @PatchMapping("/{adminId}/status") // ID값으로 관리자 상태 수정
     public ResponseEntity<ApiResponse<UpdateAdminStatusResponse>> updateAdminStatus(
-            @Valid
             @PathVariable Long adminId,
-            @RequestBody UpdateAdminStatusRequest request) {
+            @Valid @RequestBody UpdateAdminStatusRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
@@ -124,9 +121,8 @@ public class AdminController {
     // 관리자 가입 거절 API (승인대기 -> 거절)
     @PatchMapping("/{adminId}/reject")
     public ResponseEntity<ApiResponse<RejectAdminResponse>> rejectAdmin(
-            @Valid
             @PathVariable Long adminId,
-            @RequestBody RejectAdminReasonRequest request) {
+            @Valid @RequestBody RejectAdminReasonRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(
                         HttpStatus.OK,
@@ -156,8 +152,7 @@ public class AdminController {
     @PatchMapping("/me")
     public ResponseEntity<ApiResponse<UpdateMyProfileResponse>> updateMyProfile(
             HttpSession session, // 로그인 세션 정보 받기
-            @Valid
-            @RequestBody UpdateMyProfileRequest request) { // 수정 바디 받기
+            @Valid @RequestBody UpdateMyProfileRequest request) { // 수정 바디 받기
         // 세션에 저장된 로그인 관리자 정보 꺼내고
         SessionAdmin loginAdmin = (SessionAdmin) session.getAttribute("loginAdmin");
         // 만약 로그인이 안 된 상태면 401 반환하기
