@@ -53,13 +53,14 @@ public class OrderController {
 
     //주문 취소 시 재고처리 API
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> orderCancel(
+    public ResponseEntity<OrderCancelResponse> orderCancel(
             @PathVariable Long id,
             @RequestBody OrderCancelRequest request
     ) {
-        orderService.orderCancel(id, request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(orderService.orderCancel(id, request));
     }
+
 
 
 }

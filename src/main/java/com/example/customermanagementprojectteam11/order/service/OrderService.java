@@ -280,7 +280,7 @@ public class OrderService {
     //주문 취소 시 재고 처리
     //Delete 지만 로직 자체는 Patch
     @Transactional
-    public void orderCancel(Long id, OrderCancelRequest request) {
+    public OrderCancelResponse orderCancel(Long id, OrderCancelRequest request) {
 
         //1. 주문 id로 주문 조회하기
         Order order = findByIdOrThrow(id);
@@ -306,6 +306,11 @@ public class OrderService {
         //CANCELED로 바꾸는 게 끝이 아닌 재고를 다시 돌려놔야 하기 때문에 해당 구조 이용
         OrderItem orderItem = order.getOrderItem();
 
+        //6-1 주문 상품 정보가 없을 때 예외처리 진행
+        if (orderItem == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "주문 상품 정보가 없습니다.");
+        }
+
         //7. 주문 상품에서 상품과 수량을 꺼내준다.
         //재고 복구할 대상 상품+수량을 찾는 것
         Product product = orderItem.getProduct();
@@ -316,5 +321,8 @@ public class OrderService {
 
         //9. 상품 재고를 주문의 수량만큼 복구해준다.
         product.addStock(quantity);
+
+        //10. 응답 반환
+        return new OrderCancelResponse(order.getOrderStatus(), order.getCancelReason());
     }
 }
